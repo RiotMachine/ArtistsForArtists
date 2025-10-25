@@ -11,7 +11,7 @@ class User(UserMixin):
         self.passhash = passhash
         subdomainRow = dbQuery("SELECT subdomains.id FROM subdomains, users "
                                 "WHERE subdomains.userID = users.id AND users.id = ?",
-                                [id], jen=True)
+                                [self.id], jen=True)
         if subdomainRow is None:
             self.subdomainID = None
         else:
