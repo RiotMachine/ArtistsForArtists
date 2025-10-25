@@ -1,5 +1,8 @@
 ﻿artforart.db
 dev_notes/
 venv/
-ArtistsForArtists/static/*.jpeg
 ArtistsForArtists/__pycache__
+ArtistsForArtists/static/*.jpeg
+ArtistsForArtists/static/css
+ArtistsForArtists/static/node*
+ArtistsForArtists/static/package*
