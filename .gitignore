@@ -1,4 +1,5 @@
-artforart.db
+﻿artforart.db
 dev_notes/
 venv/
 ArtistsForArtists/static/*.jpeg
+ArtistsForArtists/__pycache__
