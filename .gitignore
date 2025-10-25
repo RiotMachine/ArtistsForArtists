@@ -4,5 +4,5 @@ venv/
 ArtistsForArtists/__pycache__
 ArtistsForArtists/static/*.jpeg
 ArtistsForArtists/static/css
-ArtistsForArtists/static/node*
-ArtistsForArtists/static/package*
+ArtistsForArtists/static/dev/node*
+ArtistsForArtists/static/dev/package*
