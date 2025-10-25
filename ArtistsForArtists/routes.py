@@ -254,7 +254,6 @@ def subdomainTextMod():
     uploadForm = wtforms.UploadWorkForm()
     text = None
     oldTitle = None
-    genre = None
 
     if "submit" in request.form and modForm.validate_on_submit():
         ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
@@ -284,13 +283,16 @@ def subdomainTextMod():
             work = Work(workID['id'])
             workDeets = work.getWorkRow()
             oldTitle = workDeets['title']
-            genre = workDeets['genreID']
+            modForm.genres.default = workDeets['genreID']
+            ### .process() is req after dynamically setting default
+            ### https://stackoverflow.com/questions/5519729/wtforms-how-to-select-options-in-selectmultiplefield
+            modForm.process()
             if text is None:
                 text = workDeets['content']
 
         response = make_response(render_template("acctSubTxtMod.html", 
                                                 form=modForm, uploadForm=uploadForm,
-                                                oldTitle=oldTitle, text=text, genre=genre))
+                                                oldTitle=oldTitle, text=text))
     return noCache(response)
 
 @account.route("/subdomain/delete", methods=["POST"])
