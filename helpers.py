@@ -45,10 +45,10 @@ def noCache(response):
 
 ## Other
 ### see: subdomainTextupload()
-ALLOWED_EXTENSIONS = {'docx', 'md'}
 def allowed_file(filename):
+    allowed_extensions = {'docx', 'md'}
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 def userInput(inputName):
     return request.form.get(inputName)
