@@ -8,18 +8,15 @@
 		{% set var = namespace(genreEmpty=true) %}
 		{% for worktitle in worktitles %}
 			{% if worktitle["genreString"] == genre["genreString"] %}
-				<h3>{{ genre["genreString"] }}</h3>
-				<ul>
-				{% set var.genreEmpty = false %}
-				{% break %}
+				{% if var.genreEmpty %}
+					<h3>{{ genre["genreString"] }}</h3>
+					<ul>
+					{% set var.genreEmpty = false %}
+				{% endif %}
+				<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
 			{% endif %}
 		{% endfor %}
 		{% if not var.genreEmpty %}
-			{% for worktitle in worktitles %}
-				{% if worktitle["genreString"] == genre["genreString"] %}
-				<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
-				{% endif %}
-			{% endfor %}
 			</ul>
 		{% endif %}
 	{% endfor %}
