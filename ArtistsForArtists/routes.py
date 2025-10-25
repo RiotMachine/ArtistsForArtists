@@ -5,8 +5,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from pypandoc import convert_text
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import check_password_hash, generate_password_hash
-from ArtistsForArtists import app
-from ArtistsForArtists.config import login_manager
+from ArtistsForArtists import app, login_manager
 from ArtistsForArtists.helpers import (allowed_file, dbQuery, getPrevURL, getSubdomainID, noCache, 
                                         userInput, loggedin_notallowed, subdomain_req)
 from ArtistsForArtists.forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
