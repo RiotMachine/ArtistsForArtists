@@ -4,9 +4,9 @@
     {% include "CDNs/EasyMDE.html" %}
 {% endblock %}
 
-{% block main %}
+{% block content %}
 
-<form action="{{ url_for('account.subdomainTextEdit') }}" method="post">
+<form action="{{ url_for('.subdomainTextEdit') }}" method="post">
     {{ form.csrf_token }}
     {{ form.newTitle(value=work['title'], class="form-control w-50") }}
     <textarea name="workText"></textarea>
@@ -24,7 +24,7 @@
     {% endfor %}
     <div class="col text-center">
         <button class="btn btn-primary w-auto" type="submit">Submit</button>
-        <a class="btn btn-secondary w-auto" href="{{ url_for('account.subdomainSettings') }}">Reset</a>
+        <a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>
     </div>
 </form>
 

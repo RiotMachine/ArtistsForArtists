@@ -52,7 +52,7 @@ class ChangePassForm(FlaskForm):
 class SubdomainSettingsForm(ChangePassForm):
     setauth = BooleanField('Require authentication', validators=[
         RequiredIf('oldpass', 
-                   message='You cannot both change your password and turn off authentication'
+                   message='You cannot change your password and turn off authentication'
                    )
         ])
 

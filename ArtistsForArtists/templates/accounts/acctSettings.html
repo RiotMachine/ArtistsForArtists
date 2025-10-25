@@ -1,50 +1,28 @@
 {% extends "acctTemplate.html" %}
 
-{% block main %}
+{% block legend %}
+<h3>User Settings</h3>
+{% endblock %}
 
-<h3 class="col text-center">User Settings</h3>
-<form action="{{ url_for('account.settings') }}" method="post">
+{% block content %}
+<form action="{{ url_for('.settings') }}" method="post">
 	{{ form.csrf_token }}
-	<h5>Change password</h5>
-	<div class="mb-3">
-		{{ form.oldpass(placeholder="Old password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		 {{ form.newpass(placeholder="New password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		{{ form.confirm(placeholder="Re-enter password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		{% for error in form.oldpass.errors %}
-		<p class="errorMessage">{{ error }}</p>
+	<fieldset>
+		{% include "modules/ChangePass.html" %}
+	</fieldset>
+	<fieldset>
+		<legend>User preferences</legend>
+		{% for pref in prefs %}
+		<div class="form-check form-switch form-check-inline">
+			{% if userprefs[pref] == true %}
+			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
+			{% else %}
+			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">
+			{% endif %}
+			<label class="form-check-label" for="{{pref}}Check">Make {{ pref }} my default</label>
+		</div>
 		{% endfor %}
-		{% for error in form.newpass.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-		{% for error in form.confirm.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-		{% if passErrorMsg is not none %}
-		<p class="errorMessage">{{ passErrorMsg }}</p>
-		{% endif %}
-	</div>
-
-	<h5>User preferences</h5>
-	{% for pref in prefs %}
-	<div class="form-check form-switch form-check-inline">
-		{% if userprefs[pref] == true %}
-		<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
-		{% else %}
-		<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">
-		{% endif %}
-		<label class="form-check-label" for="{{pref}}Check">Make {{ pref }} my default</label>
-	</div>
-	{% endfor %}
-
-	<div class="col text-center">
-		<button class="btn btn-primary w-auto" type="submit">Submit</button>
-	</div>
+	</fieldset>
+	<button class="btn btn-primary w-auto" type="submit">Submit</button>
 </form>
-
 {% endblock %}

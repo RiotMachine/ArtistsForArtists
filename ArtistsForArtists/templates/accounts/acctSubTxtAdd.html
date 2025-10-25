@@ -4,9 +4,9 @@
 	{% include "CDNs/EasyMDE.html" %}
 {% endblock %}
 
-{% block main %}
+{% block content %}
 
-<form action="{{ url_for('account.subdomainTextAdd') }}" method=post enctype=multipart/form-data>
+<form action="{{ url_for('.subdomainTextAdd') }}" method=post enctype=multipart/form-data>
 	<div class="g-0 row">
 		<label for="formFile" class="form-label">Upload a text</label>
 		<input class="form-control w-25 col-auto" type=file name="fileUpload" id="formFile">
@@ -16,7 +16,7 @@
 	</div>
 </form>
 
-<form action="{{ url_for('account.subdomainTextAdd') }}" method="post">
+<form action="{{ url_for('.subdomainTextAdd') }}" method="post">
 	{{ form.csrf_token }}
 	<h5>Title</h5>
 	{{ form.newTitle(class="form-control w-50") }}
@@ -27,32 +27,29 @@
 		{{ subfield.label(class="form-check-label") }}
 	</div>
 	{% endfor %}
-	<div>
-		<h5>Text</h5>
-		<textarea name="workText"></textarea>
-		<script>
-			const easyMDE = new EasyMDE();
-		</script>
-		{% if textUpload %}
-		<script id="workTextUpload" type="application/json">
-				{{ text | tojson }}
-		</script>
-		<script>
-			let JSONtext = document.getElementById('workTextUpload')
-			let text = JSON.parse(JSONtext.textContent)
-			easyMDE.value(text);
-		</script>
-		{% endif %}
-	</div>
-	{% for error in form.newTitle.errors %}
-	<p class="errorMessage">{{ error }}</p>
-	{% endfor %}
-	{% for error in form.genres.errors %}
-	<p class="errorMessage">{{ error }}</p>
+	<h5>Text</h5>
+	<textarea name="workText"></textarea>
+	<script>
+		const easyMDE = new EasyMDE();
+	</script>
+	{% if textUpload %}
+	<script id="workTextUpload" type="application/json">
+			{{ text | tojson }}
+	</script>
+	<script>
+		let JSONtext = document.getElementById('workTextUpload')
+		let text = JSON.parse(JSONtext.textContent)
+		easyMDE.value(text);
+	</script>
+	{% endif %}
+	{% for field in [form.newTitle, form.genres] %}
+		{% for error in field.errors %}
+		<p>{{ error }}</p>
+		{% endfor %}
 	{% endfor %}
 	<div class="col text-center">
 		<button class="btn btn-primary w-auto" type="submit">Submit</button>
-		<a class="btn btn-secondary w-auto" href="{{ url_for('account.subdomainSettings') }}">Reset</a>
+		<a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>
 	</div>
 </form>
 

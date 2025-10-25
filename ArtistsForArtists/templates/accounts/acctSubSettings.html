@@ -1,40 +1,20 @@
 {% extends "acctTemplate.html" %}
 
 {% block head %}
-	{% include "CDNs/jQuery.html" %}
-	{% include "CDNs/DataTables.html" %}
+	{% include "CDNs/DataTables-Head.html" %}
 {% endblock %}
 
-{% block main %}
+{% block legend %}
+<h3>Subdomain Settings</h3>
+{% endblock %}
 
-<h3 class="col text-center">Subdomain Settings</h3>
-<form action="{{ url_for('account.subdomainSettings') }}" method="post">
+{% block content %}
+<form action="{{ url_for('.subdomainSettings') }}" method="post">
 	{{ form.csrf_token }}
 	{% if authreqBool %}
-	<h5>Change password</h5>
-	<div class="mb-3">
-		{{ form.oldpass(placeholder="Old password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		{{ form.newpass(placeholder="New password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		{{ form.confirm(placeholder="Re-enter password", class="form-control w-auto", required=False) }}
-	</div>
-	<div class="mb-3">
-		{% for error in form.oldpass.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-		{% for error in form.newpass.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-		{% for error in form.confirm.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-		{% if passErrorMsg is not none %}
-		<p class="errorMessage">{{ passErrorMsg }}</p>
-		{% endif %}
-	</div>
+	<fieldset>
+		{% include "modules/ChangePass.html" %}
+	</fieldset>
 	{% endif %}
 
 	<h5>Authentication settings</h5>
@@ -87,21 +67,23 @@
 		</tbody>
 	</table>
 	<div class="col text-center">
-		<button class="btn btn-success w-auto" formaction="{{ url_for('account.subdomainTextAdd') }}"
+		<button class="btn btn-success w-auto" formaction="{{ url_for('.subdomainTextAdd') }}"
 				value="New" type="submit" name="workAction">
 			Add
 		</button>
-		<button class="btn btn-warning w-auto" formaction="{{ url_for('account.subdomainTextEdit') }}"
+		<button class="btn btn-warning w-auto" formaction="{{ url_for('.subdomainTextEdit') }}"
 				value="Modify" type="submit" name="workAction">
 			Modify
 		</button>
-		<button class="btn btn-danger w-auto" formaction="{{ url_for('account.subdomainTextDelete') }}"
+		<button class="btn btn-danger w-auto" formaction="{{ url_for('.subdomainTextDelete') }}"
 				value="Delete" type="submit" name="workAction">
 			Delete
 		</button>
 	</div>
 </form>
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/DataTables.js') }}"></script>
-
+{% block jQuery %}
+	{% include "CDNs/jQuery.html" %}
+	{% include "CDNs/DataTables-Foot.html" %}
 {% endblock %}

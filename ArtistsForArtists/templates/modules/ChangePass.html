@@ -1,0 +1,10 @@
+<legend>Change password</legend>
+{{ form.oldpass(placeholder="Old password", required=False) }}
+{{ form.newpass(placeholder="New password", required=False) }}
+{{ form.confirm(placeholder="Re-enter password", required=False) }}
+<!--ChatGPT helped on this part-->
+{% for field in [form.oldpass, form.newpass, form.confirm] %}
+    {% for error in field.errors %}
+        <p>{{ error }}</p>
+    {% endfor %}
+{% endfor %}

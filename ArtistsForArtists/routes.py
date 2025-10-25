@@ -62,6 +62,7 @@ def handle_invalid_url(e):
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_misc_bad_request(e):
+    flash('Something went wrong.')
     return redirect(url_for('homepage'), code=400)
 
 
@@ -160,8 +161,9 @@ def logout():
 @account.route("/")
 @login_required
 def index():
-    subdomain = dbQuery("SELECT pagename FROM subdomains WHERE id = ?",
-                        [current_user.subdomainID], jen=True)
+    subdomain = None
+    if current_user.subdomainID is not None:
+        subdomain = Subdomain(current_user.subdomainID)
     return render_template("acctIndex.html", subdomain=subdomain)
 
 @account.route("/settings", methods=["GET", "POST"])
@@ -173,7 +175,6 @@ def settings():
         prefs.append(prefQuery['prefString'])
 
     form = wtforms.ChangePassForm()
-    passErrorMsg = None
 
     if form.validate_on_submit():
         errorBool = False
@@ -181,7 +182,7 @@ def settings():
 
         if form.oldpass.data:
             if not check_pass(current_user.passhash, form.oldpass.data):
-                passErrorMsg = "Enter the correct current password if you want to change it"
+                flash('Settings not saved. Enter the correct current password to change it')
                 errorBool = True
             else:
                 changepassBool = True
@@ -200,8 +201,7 @@ def settings():
 
     userprefs = current_user.getPrefsDict()
     response = make_response(render_template("acctSettings.html", 
-                                             form=form, passErrorMsg=passErrorMsg,
-                                             prefs=prefs, userprefs=userprefs))
+                                             form=form, prefs=prefs, userprefs=userprefs))
     return noCache(response)
 
 @account.route("/subdomain", methods=["GET", "POST"])
