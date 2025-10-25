@@ -26,7 +26,7 @@ DB_LOCATION = "file:/home/jacob/Projects/ArtistsForArtists/artforart.db"
 
 import ArtistsForArtists.routes as routes
 app.register_blueprint(routes.subdomain)
-app.register_blueprint(routes.settings)
+app.register_blueprint(routes.accounts)
 
 '''
 # Session Cookies

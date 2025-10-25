@@ -1,0 +1,16 @@
+{% extends "template.html" %}
+
+{% block head %}
+<title>AfA Settings</title>
+{% endblock %}
+
+{% block header %}
+<h1><a href="{{ url_for('accounts.account') }}">My Account</a></h1>
+{% endblock %}
+
+{% block sidebar %}
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('accounts.accountSettings') }}">Settings</a>
+	<a class="nav-link" href="{{ url_for('accounts.subdomainSettings') }}">My Subdomain</a>
+</li>
+{% endblock %}

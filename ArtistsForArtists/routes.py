@@ -12,7 +12,7 @@ import ArtistsForArtists.forms as wtforms
 from ArtistsForArtists.classes  import Subdomain, User, Work
 
 subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<subName>', template_folder='templates/subdomains')
-settings = Blueprint('settings', __name__, url_prefix='/account', template_folder='templates/settings')
+accounts = Blueprint('accounts', __name__, url_prefix='/account', template_folder='templates/accounts')
 
 GENRES = None
 with app.app_context():
@@ -137,14 +137,14 @@ def logout():
 
 
 # Account Pages
-@settings.route("/")
+@accounts.route("/")
 @login_required
 def account():
     subdomain = dbQuery("SELECT pagename FROM subdomains WHERE id = ?",
                         [current_user.subdomainID], jen=True)
     return render_template("accountindex.html", subdomain=subdomain)
 
-@settings.route("/settings", methods=["GET", "POST"])
+@accounts.route("/settings", methods=["GET", "POST"])
 @login_required
 def accountSettings():
     prefsQuery = dbQuery("SELECT prefString FROM prefs")
@@ -184,7 +184,7 @@ def accountSettings():
                                              prefs=prefs, userprefs=userprefs))
     return noCache(response)
 
-@settings.route("/subdomain", methods=["GET", "POST"])
+@accounts.route("/subdomain", methods=["GET", "POST"])
 @login_required
 @subdomainReq
 def subdomainSettings():
@@ -204,7 +204,7 @@ def subdomainSettings():
                 changepassBool = True
 
         elif form.setauth.data and not subdomain.authReq:
-            response = make_response(redirect(url_for('settings.subdomainAddAuth'), code=307))
+            response = make_response(redirect(url_for('accounts.subdomainAddAuth'), code=307))
             return noCache(response)
 
         elif not form.setauth.data and subdomain.authReq:
@@ -222,7 +222,7 @@ def subdomainSettings():
                                              passErrorMsg=passErrorMsg, form=form))
     return noCache(response)
 
-@settings.route("/subdomain/addauth", methods=['POST'])
+@accounts.route("/subdomain/addauth", methods=['POST'])
 @login_required
 @subdomainReq
 def subdomainAddAuth():
@@ -232,13 +232,13 @@ def subdomainAddAuth():
         dbQuery("UPDATE subdomains SET authpasshash = ?, authreq = 1 WHERE id = ?", 
                 [generate_password_hash(form.newpass.data), current_user.subdomainID])
         flash('Authentication added', 'successtext')
-        response = make_response(redirect(url_for('settings.subdomainSettings')))
+        response = make_response(redirect(url_for('accounts.subdomainSettings')))
     else:
         response = make_response(render_template("acctsubauthadd.html", form=form))
 
     return noCache(response)
 
-@settings.route("/subdomain/add", methods=['POST'])
+@accounts.route("/subdomain/add", methods=['POST'])
 @login_required
 @subdomainReq
 def subdomainAddText():
@@ -249,7 +249,7 @@ def subdomainAddText():
         Work.newWork(form.newTitle.data, current_user.subdomainID, 
                      userInput("workText"), form.genres.data)
         flash('Work added', 'successtext')
-        response = make_response(redirect(url_for('settings.subdomainSettings')))
+        response = make_response(redirect(url_for('accounts.subdomainSettings')))
 
     else:
         text = None
@@ -272,7 +272,7 @@ def subdomainAddText():
 
     return noCache(response)
 
-@settings.route("/subdomain/modify", methods=["POST"])
+@accounts.route("/subdomain/modify", methods=["POST"])
 @login_required
 @subdomainReq
 def subdomainModifyText():
@@ -291,11 +291,11 @@ def subdomainModifyText():
         else:
             flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
         session.pop('workID', None)
-        response = make_response(redirect(url_for('settings.subdomainSettings')))
+        response = make_response(redirect(url_for('accounts.subdomainSettings')))
 
     return noCache(response)
 
-@settings.route("/subdomain/delete", methods=["POST"])
+@accounts.route("/subdomain/delete", methods=["POST"])
 @login_required
 @subdomainReq
 def subdomainDeleteText():
@@ -306,7 +306,7 @@ def subdomainDeleteText():
     else: 
         flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
 
-    response = make_response(redirect(url_for('settings.subdomainSettings')))
+    response = make_response(redirect(url_for('accounts.subdomainSettings')))
     return noCache(response)
 
 
