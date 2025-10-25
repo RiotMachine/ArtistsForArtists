@@ -1,0 +1,33 @@
+{% extends "subdomaintemplate.html" %}
+
+{% block main %}
+	<div class="text">
+		{% for worktitle in worktitles %}
+			{% if worktitle["genreString"] == "Poetry" %}
+				<h3>Poetry</h3>
+				<ul>
+				{% for worktitle in worktitles %}
+					{% if worktitle["genreString"] == "Poetry" %}
+						<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
+					{% endif %}
+				{% endfor %}
+				</ul>
+				{% break %}
+			{% endif %}
+		{% endfor %}
+
+		{% for worktitle in worktitles %}
+			{% if worktitle["genreString"] == "Prose" %}
+				<h3>Prose</h3>
+				<ul>
+				{% for worktitle in worktitles %}
+					{% if worktitle["genreString"] == "Prose" %}
+						<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
+					{% endif %}
+				{% endfor %}
+				</ul>
+				{% break %}
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "accounttemplate.html" %}
+
+{% block main %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+		{% for category, message in messages %}
+<h3 class="{{ category }}">{{ message }}</h3>
+		{% endfor %}
+	{% endif %}
+{% endwith %}
+
+<!--Table of static user data-->
+<div class="container col-4">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="text-center" colspan="4">Account Details</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			<tr>
+				<th class="col-2 userInfo" scope="row">Username:</th>
+				<td class="col-2 userInfo">{{ current_user.username }}</td>
+			</tr>
+			{% if subdomain is not none %}
+			<tr>
+				<th class="col-2 userInfo" scope="row">Subdomain:</th>
+				<td class="col-2 userInfo">{{ subdomain['pagename'] }}</td>
+			</tr>
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

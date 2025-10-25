@@ -1,0 +1,32 @@
+{% extends "sitetemplate.html" %}
+
+
+{% block main %}
+<h3 id="homepageBanner">Artist Pages</h3>
+<h4>Use the search bar below to find your favorite author's page!</h4>
+<form action="/search" method="get">
+    <input autocomplete="off" autofocus name="q" type="search">
+    <button type="submit">Search</button>
+</form>
+<ul id="subdomainList">
+    {% for pagename in pagenames %}
+    <li><a href="/r/{{ pagename }}">{{ pagename }}</a></li>
+    {% endfor %}
+</ul>
+
+<script>
+	let input = document.querySelector('input');
+	input.addEventListener('input', async function () {
+		let response = await fetch('/search?q=' + input.value, {
+			method: "POST",
+		});
+		let subdomains = await response.json();
+		let html = '';
+		for (let i in subdomains) {
+			let subdomain = subdomains[i].replace('<', '&lt;').replace('&', '&amp;');
+			html += '<li><a href=\"/r/' + subdomain + '\">' + subdomain + '</a></li>';
+		}
+		document.querySelector('#subdomainList').innerHTML = html;
+	});
+</script>
+{% endblock %}

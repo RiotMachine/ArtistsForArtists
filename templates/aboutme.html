@@ -1,0 +1,15 @@
+{% extends "subdomaintemplate.html" %}
+
+{% block main %}
+<h2 class="bottom">About Me</h2>
+<div id="aboutmediv">
+	<div class="text">
+		{{ htmlAboutme | safe }}
+	</div>
+	{% if hasphoto == 1 %}
+	<div class="photo">
+		<img src="/static/{{ artistpage }}.jpeg" id="aboutmephoto" alt="Artist photo">
+	</div>
+</div>
+{% endif %}
+{% endblock %}

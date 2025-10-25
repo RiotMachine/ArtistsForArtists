@@ -1,0 +1,129 @@
+h1, h2 {
+	text-align: center;
+}
+
+header {
+	background-color: lightgray;
+}
+
+main {
+	margin-left: 150px;
+	margin-right: 150px;
+	margin-bottom: 4.67em;
+}
+
+footer {
+	margin-top: 30px;
+	text-align: center;
+	line-height: 10%;
+	font-size: 0.875em;
+}
+
+.bottom {
+	margin-bottom: 60px;
+}
+
+.dropdown {
+	position: absolute;
+	right: 0.67em;
+	top: 0.67em;
+}
+
+.form-control {
+	margin-bottom: 20px;
+}
+
+.form-group {
+	margin-left: 0.67em;
+	margin-right: 0.67em;
+}
+
+.errorMessage {
+	text-align: center;
+	color: maroon;
+}
+
+.nav_links {
+	margin-top: 4.67em;
+}
+
+.nav-tabs {
+	margin-bottom: 0.66em;
+}
+
+
+.sidebar {
+	background-color: lightgray;
+	height: 100%;
+	position: fixed;
+	width: 140px;
+}
+
+.successtext {
+	text-align: center;
+	color: mediumseagreen
+}
+
+.text {
+	max-width: 80ch;
+	text-wrap: pretty;
+}
+
+.userInfo {
+	border-bottom: none;
+}
+
+#aboutmediv {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+#authlabel {
+	margin-bottom: 5px;
+}
+
+#aboutmephoto {
+	max-height: 50ch;
+	max-width: 50ch;
+	margin-left: 1.67em;
+	height: auto;
+	width: auto;
+}
+
+#darkmode {
+	position: absolute;
+	left: 0.67em;
+	top: 0.67em;
+}
+
+#divider {
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+
+#homepageBanner {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+#homepageButton {
+	background-color: cornflowerblue;
+	left: 0.67em;
+	margin-bottom: 0.67em;
+	position: absolute;
+	bottom: 0;
+}
+
+#permseshcheck {
+	margin-bottom: 0.67em;
+}
+
+#subdomainList {
+	margin-top: 0.67em;
+}
+
+#workAuthor {
+	text-align: center;
+}

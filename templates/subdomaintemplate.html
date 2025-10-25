@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+
+{% block head %}
+<title>{{ artistpage }}</title>
+{% endblock %}
+
+{% block header %}
+<h1><a href="/r/{{ artistpage }}">{{ artistpage }}</a></h1>
+{% endblock %}
+
+{% block sidebar %}
+<li class="nav-item">
+	<a class="nav-link" href="/r/{{ artistpage }}/work">Work Index</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="/r/{{ artistpage }}/aboutme">About Me</a>
+</li>
+{% endblock %}

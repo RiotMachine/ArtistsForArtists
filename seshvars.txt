@@ -1,0 +1,7 @@
+# Set based on session activity
+"{{ artistpage }}" - stores viewing credential for that artistpage after user inputs correct credential
+"url" - holds a URL for redirect
+
+# Other
+"darkmode" - boolean 0 or 1 storing current session preference; default session var set for users based on saved darkmode pref
+"work_id" - momentarily holds id of work being modfied or deleted within 'My Subdomain'
