@@ -13,7 +13,7 @@
 	<fieldset>
 		<legend>User preferences</legend>
 		{% for pref in prefs %}
-			{% if userprefs[pref] == true %}
+			{% if userprefs[pref] %}
 			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
 			{% else %}
 			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">

@@ -6,7 +6,7 @@ import pypandoc
 import werkzeug.exceptions
 from werkzeug.security          import check_password_hash as check_pass, generate_password_hash
 from ArtistsForArtists          import app, login_manager
-from ArtistsForArtists.helpers  import (dbQuery, getPrevURL, getSubdomainID, noCache, userInput, 
+from ArtistsForArtists.helpers  import (dbQuery, getPrevURL, getSubdomainID, noCache, userInput,
                                         loggedOutReq, subdomainReq)
 import ArtistsForArtists.forms as wtforms
 from ArtistsForArtists.classes  import Subdomain, User, Work
@@ -177,15 +177,12 @@ def settings():
     form = wtforms.ChangePassForm()
 
     if form.validate_on_submit():
-        errorBool = False
-        changepassBool = False
-
         if form.oldpass.data:
             if not check_pass(current_user.passhash, form.oldpass.data):
-                flash('Settings not saved. Enter the correct current password to change it')
-                errorBool = True
+                flash('Password not saved. Enter the correct current password')
             else:
-                changepassBool = True
+                current_user.changePass(form.newpass.data)
+                flash('Password changed', 'successtext')
 
         newprefsDict = {}
         for pref in prefs:
@@ -193,11 +190,7 @@ def settings():
             if userInput(pref):
                 newprefsDict[pref] = True
 
-        if not errorBool:
-            if changepassBool:
-                current_user.changePass(form.newpass.data) 
-            current_user.updatePrefs(newprefsDict)
-            flash('Settings saved', 'successtext')
+        current_user.updatePrefs(newprefsDict)
 
     userprefs = current_user.getPrefsDict()
     response = make_response(render_template("acctSettings.html", 
@@ -213,26 +206,22 @@ def subdomainSettings():
     form = wtforms.SubdomainSettingsForm()
 
     if form.validate_on_submit():
-        changepassBool = False
 
         if form.oldpass.data:
             if not check_pass(subdomain.authPassHash, form.oldpass.data):
-                flash('Settings not saved. Enter the correct current password to change it')
+                flash('Password not saved. Enter the correct current password')
             else:
-                changepassBool = True
+                subdomain.changePass(form.newpass.data)
+                flash('Subdomain password changed', 'successtext')
 
         elif form.setAuth.data and not subdomain.authReq:
-            response = make_response(redirect(url_for('account.subdomainAuthEdit'), code=307))
+            response = make_response(redirect(url_for('account.subdomainAuthEdit')))
             return noCache(response)
 
         elif not form.setAuth.data and subdomain.authReq:
             dbQuery("UPDATE subdomains SET authreq = 0 where id = ?", [subdomain.id])
             flash('Authentication turned off', 'successtext')
 
-        if changepassBool:
-            subdomain.changePass(form.newpass.data)
-            flash('Subdomain password changed', 'successtext')
-    
         subdomain = Subdomain(current_user.subdomainID)
 
     response = make_response(render_template("acctSubSettings.html", 
@@ -240,7 +229,7 @@ def subdomainSettings():
                                              form=form))
     return noCache(response)
 
-@account.route("/subdomain/addauth", methods=['POST'])
+@account.route("/subdomain/addauth", methods=['GET', 'POST'])
 @login_required
 @subdomainReq
 def subdomainAuthEdit():
@@ -256,70 +245,59 @@ def subdomainAuthEdit():
 
     return noCache(response)
 
-@account.route("/subdomain/add", methods=['POST'])
+@account.route("/subdomain/mod", methods=['GET', 'POST'])
 @login_required
 @subdomainReq
-def subdomainTextAdd():
-    form = wtforms.ModWorkForm()
-    form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
+def subdomainTextMod():
+    modForm = wtforms.ModWorkForm()
+    modForm.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
     uploadForm = wtforms.UploadWorkForm()
 
-    if form.validate_on_submit():
-        Work.newWork(form.newTitle.data, current_user.subdomainID, 
-                     userInput("workText"), form.genres.data)
-        flash('Work added', 'successtext')
+    if modForm.validate_on_submit():
+        ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
+        referer = urllib.urlparse(request.referrer)
+        if (refererQuery := urllib.parse_qs(referer.query)):
+            work = Work(refererQuery['workID'][0])
+            work.modifyWork(userInput("workText"), modForm.newTitle.data, modForm.genres.data)
+        else:
+            Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
+                        userInput("workText"), modForm.genres.data)
+        flash('Changes saved', 'successtext')
         response = make_response(redirect(url_for('account.subdomainSettings')))
 
     else:
         text = None
+        oldTitle = None
+
         if uploadForm.validate_on_submit():
             file = uploadForm.upload.data
             ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
             filetext = file.read()
             extension = file.filename.rsplit('.', 1)[1].lower()
             text = pypandoc.convert_text(filetext, 'md', format=extension)
-        response = make_response(render_template("acctSubTxtAdd.html", 
-                                                 form=form, text=text, uploadForm=uploadForm))
 
-    return noCache(response)
+        if request.args.get("workID"):
+            workID = dbQuery("SELECT id FROM works WHERE id = ?", [request.args.get("workID")], jen=True)
+            if workID is None:
+                abort(404)
+            work = Work(workID['id'])
+            workDeets = work.getWorkRow()
+            oldTitle = workDeets['title']
+            if text is None:
+                text = workDeets['content']
 
-@account.route("/subdomain/modify", methods=["POST"])
-@login_required
-@subdomainReq
-def subdomainTextEdit():
-    form = wtforms.ModWorkForm()
-    form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
-
-    if userInput("workID"):
-        work = Work(userInput("workID"))
-        session['workID'] = work.id
-        workDeets = work.getWorkRow()
-        response = make_response(render_template("acctSubTxtEdit.html", 
-                                                 form=form, oldTitle=workDeets['title'],
-                                                 text=workDeets['content']))
-    else:
-        if form.validate_on_submit():
-            work = Work(session['workID'])
-            work.modifyWork(userInput("workText"), form.newTitle.data)
-            flash('Changes saved', 'successtext')
-        else:
-            flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
-        session.pop('workID', None)
-        response = make_response(redirect(url_for('account.subdomainSettings')))
-
+        response = make_response(render_template("acctSubTxtMod.html", 
+                                                form=modForm, uploadForm=uploadForm,
+                                                oldTitle=oldTitle, text=text))
     return noCache(response)
 
 @account.route("/subdomain/delete", methods=["POST"])
 @login_required
 @subdomainReq
 def subdomainTextDelete():
-    if userInput("workID"):
-        work = Work(userInput("workID"))
-        work.deleteWork()
-        flash('Work deleted', 'errorMessage')
-    else: 
-        flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
-
+    work = Work(userInput("workID"))
+    work.deleteWork()
+    flash('Work deleted', 'errorMessage')
     response = make_response(redirect(url_for('account.subdomainSettings')))
     return noCache(response)
 

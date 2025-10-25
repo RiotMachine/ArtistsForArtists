@@ -1,0 +1,61 @@
+{% extends "acctTemplate.html" %}
+
+{% block head %}
+	{% include "CDNs/EasyMDE.html" %}
+{% endblock %}
+
+{% block content %}
+
+<h5>Upload a text</h5>
+<form method="POST" enctype="multipart/form-data">
+	{{ uploadForm.csrf_token }}
+	{{ uploadForm.upload }}
+	<button class="btn btn-secondary btn-sm" type="submit">
+		Render
+	</button>
+	{% for error in uploadForm.upload.errors %}
+		<p>{{ error }}</p>
+	{% endfor %}
+</form>
+
+<form action="{{ url_for('.subdomainTextMod') }}" method="POST">
+	{{ form.csrf_token }}
+	<fieldset>
+		<legend>Title</legend>
+		{% if oldTitle is none %}
+		{{ form.newTitle }}
+		{% else %}
+		{{ form.newTitle(value=oldTitle) }}
+		{% endif %}
+		{% for error in form.newTitle.errors %}
+			<p>{{ error }}</p>
+		{% endfor %}
+	</fieldset>
+
+	<fieldset>
+		<legend>Genre</legend>
+		{% for subfield in form.genres %}
+			{{ subfield.label }}
+			{{ subfield }}
+		{% endfor %}
+		{% for error in form.genres.errors %}
+			<p>{{ error }}</p>
+		{% endfor %}
+	</fieldset>
+
+	<fieldset>
+		<legend>Text</legend>
+		{% if text is none %}
+		<textarea name="workText" id="EasyMDEText"></textarea>
+		{% else %}
+		<textarea name="workText" id="EasyMDEText">{{ text }}</textarea>
+		{% endif %}
+	</fieldset>
+
+	<button class="btn btn-primary w-auto" type="submit">
+		Submit
+	</button>
+	<button class="btn btn-secondary w-auto" type="reset">Reset</button>
+</form>
+
+{% endblock %}

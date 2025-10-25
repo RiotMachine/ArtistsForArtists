@@ -7,12 +7,13 @@
 	{{ form.csrf_token }}
 
 	{{ form.newpass(placeholder="Password") }}
-	{{ form.confirm(placeholder="Re-enter password") }}
-
-	{% for field in [form.newpass, form.confirm] %}
-		{% for error in field.errors %}
+	{% for error in form.newpass.errors %}
 		<p>{{ error }}</p>
-		{% endfor %}
+	{% endfor %}
+	
+	{{ form.confirm(placeholder="Re-enter password") }}
+	{% for error in form.confirm.errors %}
+		<p>{{ error }}</p>
 	{% endfor %}
 
 	<button class="btn btn-primary w-auto" type="submit">Submit</button>

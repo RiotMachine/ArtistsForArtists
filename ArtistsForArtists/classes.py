@@ -104,9 +104,9 @@ class Work():
                             "RETURNING id", [title, subdomainID, content, genreID])
         return cls(newWorkID)
 
-    def modifyWork(self, text, title):
-        dbQuery("UPDATE works SET content = ?, title = ? WHERE id = ?", 
-                [text, title, self.id])
+    def modifyWork(self, text, title, genreID):
+        dbQuery("UPDATE works SET content = ?, title = ?, genreID = ? WHERE id = ?", 
+                [text, title, genreID, self.id])
 
     def deleteWork(self):
         dbQuery("DELETE FROM works WHERE id = ?", [self.id])
