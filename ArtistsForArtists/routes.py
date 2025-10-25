@@ -252,29 +252,30 @@ def subdomainTextMod():
     modForm = wtforms.ModWorkForm()
     modForm.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
     uploadForm = wtforms.UploadWorkForm()
+    text = None
+    oldTitle = None
 
-    if modForm.validate_on_submit():
-        ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
-        referer = urllib.urlparse(request.referrer)
-        if (refererQuery := urllib.parse_qs(referer.query)):
-            work = Work(refererQuery['workID'][0])
-            work.modifyWork(userInput("workText"), modForm.newTitle.data, modForm.genres.data)
-        else:
-            Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
-                        userInput("workText"), modForm.genres.data)
-        flash('Changes saved', 'successtext')
-        response = make_response(redirect(url_for('account.subdomainSettings')))
+    if "submit" in request.form:
+        if modForm.validate_on_submit():
+            ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
+            referer = urllib.urlparse(request.referrer)
+            if (refererQuery := urllib.parse_qs(referer.query)):
+                work = Work(refererQuery['workID'][0])
+                work.modifyWork(userInput("workText"), modForm.newTitle.data, modForm.genres.data)
+            else:
+                Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
+                            userInput("workText"), modForm.genres.data)
+            flash('Changes saved', 'successtext')
+            response = make_response(redirect(url_for('account.subdomainSettings')))
 
     else:
-        text = None
-        oldTitle = None
-
-        if uploadForm.validate_on_submit():
-            file = uploadForm.upload.data
-            ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
-            filetext = file.read()
-            extension = file.filename.rsplit('.', 1)[1].lower()
-            text = pypandoc.convert_text(filetext, 'md', format=extension)
+        if "upload" in request.form:
+            if uploadForm.validate_on_submit():
+                file = uploadForm.upload.data
+                ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
+                filetext = file.read()
+                extension = file.filename.rsplit('.', 1)[1].lower()
+                text = pypandoc.convert_text(filetext, 'md', format=extension)
 
         if request.args.get("workID"):
             workID = dbQuery("SELECT id FROM works WHERE id = ?", [request.args.get("workID")], jen=True)

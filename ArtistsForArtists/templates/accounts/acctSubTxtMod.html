@@ -10,7 +10,7 @@
 <form method="POST" enctype="multipart/form-data">
 	{{ uploadForm.csrf_token }}
 	{{ uploadForm.upload }}
-	<button class="btn btn-secondary btn-sm" type="submit">
+	<button class="btn btn-secondary btn-sm" type="submit" name="upload">
 		Render
 	</button>
 	{% for error in uploadForm.upload.errors %}
@@ -52,7 +52,7 @@
 		{% endif %}
 	</fieldset>
 
-	<button class="btn btn-primary w-auto" type="submit">
+	<button class="btn btn-primary w-auto" type="submit" name="submit">
 		Submit
 	</button>
 	<button class="btn btn-secondary w-auto" type="reset">Reset</button>
