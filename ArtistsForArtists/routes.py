@@ -260,7 +260,7 @@ def subdomainAuthEdit():
 @login_required
 @subdomainReq
 def subdomainTextAdd():
-    form = wtforms.NewWorkForm()
+    form = wtforms.ModWorkForm()
     form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
     uploadForm = wtforms.UploadWorkForm()
 
@@ -287,13 +287,16 @@ def subdomainTextAdd():
 @login_required
 @subdomainReq
 def subdomainTextEdit():
-    form = wtforms.ModifyWorkForm()
+    form = wtforms.ModWorkForm()
+    form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
 
     if userInput("workID"):
         work = Work(userInput("workID"))
         session['workID'] = work.id
+        workDeets = work.getWorkRow()
         response = make_response(render_template("acctSubTxtEdit.html", 
-                                                 form=form, work=work.getWorkRow()))
+                                                 form=form, oldTitle=workDeets['title'],
+                                                 text=workDeets['content']))
     else:
         if form.validate_on_submit():
             work = Work(session['workID'])

@@ -1,0 +1,34 @@
+<fieldset>
+    <legend>Title</legend>
+    {% if oldTitle is none %}
+    {{ form.newTitle }}
+    {% else %}
+    {{ form.newTitle(value=oldTitle) }}
+    {% endif %}
+    {% for error in form.newTitle.errors %}
+        <p>{{ error }}</p>
+    {% endfor %}
+</fieldset>
+
+<fieldset>
+    <legend>Genre</legend>
+    {% for subfield in form.genres %}
+        {{ subfield.label }}
+        {{ subfield }}
+    {% endfor %}
+    {% for error in form.genres.errors %}
+        <p>{{ error }}</p>
+    {% endfor %}
+</fieldset>
+
+<fieldset>
+    <legend>Text</legend>
+    {% if text is none %}
+    <textarea name="workText" id="EasyMDEText"></textarea>
+    {% else %}
+    <textarea name="workText" id="EasyMDEText">{{ text }}</textarea>
+    {% endif %}
+</fieldset>
+
+<button class="btn btn-primary w-auto" type="submit">Submit</button>
+<a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>

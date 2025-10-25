@@ -67,15 +67,13 @@ class NewPassForm(FlaskForm):
         ])
 
 
-class ModifyWorkForm(FlaskForm):
+class ModWorkForm(FlaskForm):
     newTitle = StringField(validators=[
         InputRequired(message='Your work must have a title')
         ])
-
-class NewWorkForm(ModifyWorkForm):
     genres = RadioField(validators=[
         InputRequired(message='You must choose a genre')
-        ])
+        ])    
 
 
 class UploadWorkForm(FlaskForm):

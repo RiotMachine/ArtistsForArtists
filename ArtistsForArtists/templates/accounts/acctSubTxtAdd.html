@@ -18,37 +18,7 @@
 
 <form action="{{ url_for('.subdomainTextAdd') }}" method="post">
 	{{ form.csrf_token }}
-
-	<fieldset>
-		<legend>Title</legend>
-		{{ form.newTitle }}
-	</fieldset>
-
-	<fieldset>
-		<legend>Genre</legend>
-		{% for subfield in form.genres %}
-			{{ subfield.label }}
-			{{ subfield }}
-		{% endfor %}
-	</fieldset>
-
-	<fieldset>
-		<legend>Text</legend>
-		{% if text is none %}
-		<textarea name="workText" id="EasyMDEText"></textarea>
-		{% else %}
-		<textarea name="workText" id="EasyMDEText">{{ text }}</textarea>
-		{% endif %}
-	</fieldset>
-
-	{% for field in [form.newTitle, form.genres] %}
-		{% for error in field.errors %}
-		<p>{{ error }}</p>
-		{% endfor %}
-	{% endfor %}
-
-	<button class="btn btn-primary w-auto" type="submit">Submit</button>
-	<a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>
+	{% include "modules/WorkMod.html" %}
 </form>
 
 {% endblock %}
