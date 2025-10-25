@@ -1,6 +1,7 @@
 from wtforms            import BooleanField, PasswordField, RadioField, StringField
 from wtforms.validators import EqualTo, InputRequired
 from flask_wtf          import FlaskForm
+from flask_wtf.file     import FileField, FileAllowed, FileRequired
 
 ## credit to @dcrosta
 ## https://stackoverflow.com/questions/8463209/how-to-make-a-field-conditionally-optional-in-wtforms
@@ -50,7 +51,7 @@ class ChangePassForm(FlaskForm):
         ])
 
 class SubdomainSettingsForm(ChangePassForm):
-    setauth = BooleanField('Require authentication', validators=[
+    setAuth = BooleanField('Require authentication', validators=[
         RequiredIf('oldpass', 
                    message='You cannot change your password and turn off authentication'
                    )
@@ -75,3 +76,10 @@ class NewWorkForm(ModifyWorkForm):
     genres = RadioField(validators=[
         InputRequired(message='You must choose a genre')
         ])
+
+
+class UploadWorkForm(FlaskForm):
+    upload = FileField('upload', validators=[
+        FileRequired(),
+        FileAllowed(['docx', 'md', 'odt'], 'Word, Markdown, and OpenOffice files allowed.')
+    ])

@@ -6,10 +6,14 @@
 
 {% block content %}
 
+<h5>Upload a text</h5>
 <form action="{{ url_for('.subdomainTextAdd') }}" method=post enctype=multipart/form-data>
-	<label for="formFile" class="form-label">Upload a text</label>
-	<input class="form-control w-25 col-auto" type=file name="fileUpload" id="formFile">
+	{{ uploadForm.csrf_token }}
+	{{ uploadForm.upload }}
 	<button class="btn btn-secondary btn-sm" type="submit">Render</button>
+	{% for error in uploadForm.upload.errors %}
+		<p>{{ error }}</p>
+	{% endfor %}
 </form>
 
 <form action="{{ url_for('.subdomainTextAdd') }}" method="post">

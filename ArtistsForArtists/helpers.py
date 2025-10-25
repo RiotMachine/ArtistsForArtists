@@ -44,13 +44,6 @@ def noCache(response):
 	response.headers['Cache-Control'] = 'no-store'
 	return response
 
-## Other
-### see: subdomainTextupload()
-def allowedFile(filename):
-    allowedExtensions = {'docx', 'md'}
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowedExtensions
-
 def userInput(inputName):
     return request.form.get(inputName)
 

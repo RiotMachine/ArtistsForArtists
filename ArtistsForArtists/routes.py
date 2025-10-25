@@ -6,8 +6,8 @@ import pypandoc
 import werkzeug.exceptions
 from werkzeug.security          import check_password_hash as check_pass, generate_password_hash
 from ArtistsForArtists          import app, login_manager
-from ArtistsForArtists.helpers  import (allowedFile, dbQuery, getPrevURL, getSubdomainID, noCache, 
-                                        userInput, loggedOutReq, subdomainReq)
+from ArtistsForArtists.helpers  import (dbQuery, getPrevURL, getSubdomainID, noCache, userInput, 
+                                        loggedOutReq, subdomainReq)
 import ArtistsForArtists.forms as wtforms
 from ArtistsForArtists.classes  import Subdomain, User, Work
 
@@ -210,23 +210,22 @@ def settings():
 def subdomainSettings():
     subdomain = Subdomain(current_user.subdomainID)
     works = subdomain.getWorksTable()
-
     form = wtforms.SubdomainSettingsForm()
 
     if form.validate_on_submit():
         changepassBool = False
-        # Only displaying the change pass option if authreqBool
+
         if form.oldpass.data:
-            if not check_pass(subdomain.authPassHash, userInput("oldpass")):
+            if not check_pass(subdomain.authPassHash, form.oldpass.data):
                 flash('Settings not saved. Enter the correct current password to change it')
             else:
                 changepassBool = True
 
-        elif form.setauth.data and not subdomain.authReq:
+        elif form.setAuth.data and not subdomain.authReq:
             response = make_response(redirect(url_for('account.subdomainAuthEdit'), code=307))
             return noCache(response)
 
-        elif not form.setauth.data and subdomain.authReq:
+        elif not form.setAuth.data and subdomain.authReq:
             dbQuery("UPDATE subdomains SET authreq = 0 where id = ?", [subdomain.id])
             flash('Authentication turned off', 'successtext')
 
@@ -263,6 +262,7 @@ def subdomainAuthEdit():
 def subdomainTextAdd():
     form = wtforms.NewWorkForm()
     form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
+    uploadForm = wtforms.UploadWorkForm()
 
     if form.validate_on_submit():
         Work.newWork(form.newTitle.data, current_user.subdomainID, 
@@ -272,19 +272,14 @@ def subdomainTextAdd():
 
     else:
         text = None
-        if 'fileUpload' in request.files:
+        if uploadForm.validate_on_submit():
+            file = uploadForm.upload.data
             ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
-            file = request.files['fileUpload']
-            if file.filename == '':
-                flash('No selected file', 'errorMessage')
-            elif file and allowedFile(file.filename):
-                filetext = file.read()
-                extension = file.filename.rsplit('.', 1)[1].lower()
-                text = pypandoc.convert_text(filetext, 'md', format=extension)
-            else:
-                flash('Invalid file type', 'errorMessage')
+            filetext = file.read()
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            text = pypandoc.convert_text(filetext, 'md', format=extension)
         response = make_response(render_template("acctSubTxtAdd.html", 
-                                                 form=form, text=text))
+                                                 form=form, text=text, uploadForm=uploadForm))
 
     return noCache(response)
 

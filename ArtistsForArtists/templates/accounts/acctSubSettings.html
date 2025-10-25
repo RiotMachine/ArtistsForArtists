@@ -20,14 +20,14 @@
 	<fieldset>
 		<legend>Authentication settings</legend>
 		
-		{{ form.setauth.label }}
+		{{ form.setAuth.label }}
 		{% if authreqBool %}
-		{{ form.setauth(checked=True, required=False) }}
+		{{ form.setAuth(checked=True, required=False) }}
 		{% else %}
-		{{ form.setauth(required=False) }}
+		{{ form.setAuth(required=False) }}
 		{% endif %}
 
-		{% for error in form.setauth.errors %}
+		{% for error in form.setAuth.errors %}
 		<p class="errorMessage">{{ error }}</p>
 		{% endfor %}
 	</fieldset>
