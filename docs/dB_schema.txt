@@ -1,0 +1,65 @@
+# dB setup
+
+## storage tables
+CREATE TABLE IF NOT EXISTS users (
+id INTEGER PRIMARY KEY NOT NULL,
+username TEXT NOT NULL UNIQUE,
+passwordhash TEXT NOT NULL,
+firstname TEXT,
+lastname TEXT
+);
+
+CREATE TABLE IF NOT EXISTS subdomains (
+id INTEGER PRIMARY KEY NOT NULL,
+userID INTEGER,
+pagename TEXT NOT NULL UNIQUE,
+artistname TEXT NOT NULL,
+authreq INT NOT NULL,
+authpasshash TEXT, 
+aboutme TEXT DEFAULT 'Hello. This is my About Me page.', 
+hasphoto INTEGER NOT NULL DEFAULT 0,
+CHECK(authreq BETWEEN 0 AND 1),
+CHECK(hasphoto BETWEEN 0 AND 1),
+FOREIGN KEY (userID) references users (ID)
+);
+
+CREATE TABLE IF NOT EXISTS works (
+id INTEGER PRIMARY KEY NOT NULL,
+title TEXT NOT NULL,
+subdomainID INTEGER NOT NULL,
+content TEXT NOT NULL,
+genreID INTEGER,
+FOREIGN KEY (subdomainID) REFERENCES subdomains (id),
+FOREIGN KEY (genreID) REFERENCES genres (id)
+);
+
+## attribute tables 
+CREATE TABLE IF NOT EXISTS genres (
+id INTEGER PRIMARY KEY NOT NULL,
+genreString TEXT NOT NULL
+);
+INSERT OR IGNORE INTO genres (genreString) 
+    VALUES ('Prose');
+INSERT OR IGNORE INTO genres (genreString) 
+    VALUES ('Poetry');
+
+CREATE TABLE IF NOT EXISTS prefs (
+id INTEGER PRIMARY KEY NOT NULL,
+prefString TEXT NOT NULL,
+prefDetails TEXT
+);
+INSERT OR IGNORE INTO prefs (prefString, prefDetails) 
+    VALUES ('darkmode', 'sets the initial Boolean value of a user''s darkmode session variable upon login');
+
+## junction tables
+CREATE TABLE IF NOT EXISTS userPrefs (
+id INTEGER PRIMARY KEY NOT NULL,
+userID INTEGER NOT NULL,
+prefID INTEGER NOT NULL,
+prefBool INT NOT NULL DEFAULT 0,
+CHECK(prefBool BETWEEN 0 AND 1)
+FOREIGN KEY (userID) REFERENCES users (id)
+FOREIGN KEY (prefID) REFERENCES prefs (id)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS userIDandprefID
+ON userPrefs(userID, prefID);

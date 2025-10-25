@@ -129,14 +129,14 @@ def login():
 
     if form.validate_on_submit():
         userInfo = dbQuery("SELECT id, username, passwordhash FROM users WHERE username = ?", 
-                        [username], jen=True)
+                            [username], jen=True)
         if userInfo is None or not check_password_hash(userInfo['passwordhash'], password):
             flash("Your username or password is incorrect", 'errorMessage')
             response = make_response(render_template("login.html", form=form))
         else:
             user = User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
             login_user(user, remember=form.rememberMe.data)
-            current_user.setupUserPrefs()
+            current_user.setupPrefs()
             if session.get("url") is not None and ((urlparse(session['url'])[2] != url_for('login')) and 
                                                    (urlparse(session['url'])[2] != url_for('register')) and
                                                    (urlparse(session['url'])[2] != url_for('homepage'))):
@@ -195,10 +195,12 @@ def accountSettings():
                 newprefsDict[pref] = True
 
         if not errorBool:
+            if changepassBool:
+                current_user.changePass(form.newpass.data) 
+            currentUser.updatePrefs(newprefsDict)
             flash('Settings saved', 'successtext')
-            current_user.modUserSettings(changepassBool, newprefsDict)
 
-    userprefs = current_user.getUserPrefsDict()
+    userprefs = current_user.getPrefsDict()
     response = make_response(render_template("accountsettings.html", 
                                              form=form, passErrorMsg=passErrorMsg,
                                              prefs=prefs, userprefs=userprefs))
@@ -232,8 +234,7 @@ def subdomainSettings():
             flash('Authentication turned off', 'successtext')
 
         if changepassBool:
-            dbQuery("UPDATE subdomains SET authpasshash = ? WHERE id = ?", 
-                    [generate_password_hash(userInput("newpass")), subdomain.id])
+            subdomain.changePass(form.newpass.data)
             flash('Subdomain password changed', 'successtext')
     
         subdomain = Subdomain(current_user.subdomainID)
@@ -268,7 +269,7 @@ def subdomainAddText():
     form.genres.choices = [(genre['id'], genre['genreString']) for genre in genres]
 
     if form.validate_on_submit():
-        Work.newWork(form.newTitle.data, current_user.getUserArtistID(), 
+        Work.newWork(form.newTitle.data, current_user.subdomainID, 
                      userInput("workText"), form.genres.data)
         flash('Work added', 'successtext')
         response = make_response(redirect(url_for('subdomainSettings')))
@@ -371,7 +372,8 @@ def aboutme(artistpage):
     hasphoto = aboutmeRow['hasphoto']
 
     return render_template("aboutme.html", 
-                           artistpage=subdomain.name, hasphoto=hasphoto, htmlAboutme=htmlAboutme)
+                           artistpage=subdomain.name, hasphoto=hasphoto, 
+                           htmlAboutme=htmlAboutme)
 
 @app.route('/r/<artistpage>/work')
 def workindex(artistpage):
@@ -381,7 +383,7 @@ def workindex(artistpage):
         return redirect(url_for('authenticate', artistpage=subdomain.name))
 
     return render_template("workindex.html", 
-                           artistpage=subdomain.name, worktitles=subdomain.getWorkList())
+                           artistpage=subdomain.name, worktitles=subdomain.getWorksList())
 
 @app.route('/r/<artistpage>/authenticate', methods=["GET", "POST"])
 def authenticate(artistpage):
@@ -414,15 +416,10 @@ def displaywork(artistpage, worktitle):
     if text is None:
         abort(404)
     htmlText = convert_text(text['content'], 'html', format='md')
-
-    name = dbQuery("SELECT firstname, lastname FROM artists, subdomains "
-                   "WHERE subdomains.artistID = artists.ID AND subdomains.id = ?", 
-                   [subdomain.id], jen=True)
-    artistString = name['firstname'] + " " + name['lastname']
    
     return render_template("text.html", 
-                           artistpage=subdomain.name, worktitle=worktitle, artist=artistString, 
-                           htmlText=htmlText)
+                           artistpage=subdomain.name, worktitle=worktitle, 
+                           artist=subdomain.getArtistName(), htmlText=htmlText)
 
 
 # Windows-provided default Python Flask app code
