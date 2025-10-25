@@ -102,15 +102,15 @@
 		</tbody>
 	</table>
 	<div class="col text-center">
-		<button class="btn btn-success w-auto" formaction="{{ url_for('subdomainAddText') }}"
+		<button class="btn btn-success w-auto" formaction="{{ url_for('settings.subdomainAddText') }}"
 				value="New" type="submit" name="workAction">
 			Add
 		</button>
-		<button class="btn btn-warning w-auto" formaction="{{ url_for('subdomainModifyText') }}"
+		<button class="btn btn-warning w-auto" formaction="{{ url_for('settings.subdomainModifyText') }}"
 				value="Modify" type="submit" name="workAction">
 			Modify
 		</button>
-		<button class="btn btn-danger w-auto" formaction="{{ url_for('subdomainDeleteText') }}"
+		<button class="btn btn-danger w-auto" formaction="{{ url_for('settings.subdomainDeleteText') }}"
 				value="Delete" type="submit" name="workAction">
 			Delete
 		</button>

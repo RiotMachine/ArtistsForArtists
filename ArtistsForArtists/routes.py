@@ -1,5 +1,5 @@
 import urllib.parse as urllib
-from flask import (abort, flash, g, jsonify, make_response, redirect, 
+from flask import (Blueprint, abort, flash, g, jsonify, make_response, redirect, 
                     render_template, request, session, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from pypandoc import convert_text
@@ -11,6 +11,9 @@ from ArtistsForArtists.helpers import (allowed_file, dbQuery, getPrevURL, getSub
 from ArtistsForArtists.forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
                                         NewWorkForm, RegisterForm, SubdomainSettingsForm)
 from ArtistsForArtists.classes import Subdomain, User, Work
+
+subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<artistpage>', template_folder='templates/subdomains')
+settings = Blueprint('settings', __name__, url_prefix='/account', template_folder='templates/settings')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -130,14 +133,14 @@ def logout():
 
 
 # Account Pages
-@app.route("/account")
+@settings.route("/")
 @login_required
 def account():
     subdomain = dbQuery("SELECT pagename FROM subdomains WHERE id = ?",
                         [current_user.subdomainID], jen=True)
     return render_template("accountindex.html", subdomain=subdomain)
 
-@app.route("/account/settings", methods=["GET", "POST"])
+@settings.route("/settings", methods=["GET", "POST"])
 @login_required
 def accountSettings():
     prefsQuery = dbQuery("SELECT prefString FROM prefs")
@@ -177,7 +180,7 @@ def accountSettings():
                                              prefs=prefs, userprefs=userprefs))
     return noCache(response)
 
-@app.route("/account/subdomain", methods=["GET", "POST"])
+@settings.route("/subdomain", methods=["GET", "POST"])
 @login_required
 @subdomain_req
 def subdomainSettings():
@@ -197,7 +200,7 @@ def subdomainSettings():
                 changepassBool = True
 
         elif form.setauth.data and not subdomain.authReq:
-            response = make_response(redirect(url_for('subdomainAddAuth'), code=307))
+            response = make_response(redirect(url_for('settings.subdomainAddAuth'), code=307))
             return noCache(response)
 
         elif not form.setauth.data and subdomain.authReq:
@@ -215,7 +218,7 @@ def subdomainSettings():
                                              passErrorMsg=passErrorMsg, form=form))
     return noCache(response)
 
-@app.route("/account/subdomain/addauth", methods=['POST'])
+@settings.route("/subdomain/addauth", methods=['POST'])
 @login_required
 @subdomain_req
 def subdomainAddAuth():
@@ -225,13 +228,13 @@ def subdomainAddAuth():
         dbQuery("UPDATE subdomains SET authpasshash = ?, authreq = 1 WHERE id = ?", 
                 [generate_password_hash(form.newpass.data), current_user.subdomainID])
         flash('Authentication added', 'successtext')
-        response = make_response(redirect(url_for('subdomainSettings')))
+        response = make_response(redirect(url_for('settings.subdomainSettings')))
     else:
         response = make_response(render_template("acctsubauthadd.html", form=form))
 
     return noCache(response)
 
-@app.route("/account/subdomain/add", methods=['POST'])
+@settings.route("/subdomain/add", methods=['POST'])
 @login_required
 @subdomain_req
 def subdomainAddText():
@@ -243,7 +246,7 @@ def subdomainAddText():
         Work.newWork(form.newTitle.data, current_user.subdomainID, 
                      userInput("workText"), form.genres.data)
         flash('Work added', 'successtext')
-        response = make_response(redirect(url_for('subdomainSettings')))
+        response = make_response(redirect(url_for('settings.subdomainSettings')))
 
     else:
         text = None
@@ -266,7 +269,7 @@ def subdomainAddText():
 
     return noCache(response)
 
-@app.route("/account/subdomain/modify", methods=["POST"])
+@settings.route("/subdomain/modify", methods=["POST"])
 @login_required
 @subdomain_req
 def subdomainModifyText():
@@ -285,11 +288,11 @@ def subdomainModifyText():
         else:
             flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
         session.pop('workID', None)
-        response = make_response(redirect(url_for('subdomainSettings')))
+        response = make_response(redirect(url_for('settings.subdomainSettings')))
 
     return noCache(response)
 
-@app.route("/account/subdomain/delete", methods=["POST"])
+@settings.route("/subdomain/delete", methods=["POST"])
 @login_required
 @subdomain_req
 def subdomainDeleteText():
@@ -300,7 +303,7 @@ def subdomainDeleteText():
     else: 
         flash('Something went wrong. Did you leave a field blank?', 'errorMessage')
 
-    response = make_response(redirect(url_for('subdomainSettings')))
+    response = make_response(redirect(url_for('settings.subdomainSettings')))
     return noCache(response)
 
 
@@ -329,12 +332,12 @@ def search():
 
     
 # Subdomain Pages
-@app.route('/r/<artistpage>')
+@subdomain.route('/')
 def artistpage(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
     return render_template("artistpage.html", artistpage=subdomain.name)
 
-@app.route('/r/<artistpage>/aboutme')
+@subdomain.route('/aboutme')
 def aboutme(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
 
@@ -346,17 +349,17 @@ def aboutme(artistpage):
                            artistpage=subdomain.name, hasphoto=hasphoto, 
                            htmlAboutme=htmlAboutme)
 
-@app.route('/r/<artistpage>/work')
+@subdomain.route('/work')
 def workindex(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
     
     if not subdomain.verifyAuth():
-        return redirect(url_for('authenticate', artistpage=subdomain.name))
+        return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
 
     return render_template("workindex.html", 
                            artistpage=subdomain.name, worktitles=subdomain.getWorksList())
 
-@app.route('/r/<artistpage>/authenticate', methods=["GET", "POST"])
+@subdomain.route('/authenticate', methods=["GET", "POST"])
 def authenticate(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
     errorText = None
@@ -365,23 +368,23 @@ def authenticate(artistpage):
         authTry = userInput('password')
         if check_password_hash(subdomain.authPassHash, authTry):
             session[subdomain.name] = authTry
-            return redirect(url_for('workindex', artistpage=subdomain.name))
+            return redirect(url_for('subdomain.workindex', artistpage=subdomain.name))
         else:
             errorText = "Sorry, that password is incorrect."
 
     if subdomain.verifyAuth():
-        return redirect(url_for('workindex', artistpage=subdomain.name))
+        return redirect(url_for('subdomain.workindex', artistpage=subdomain.name))
 
     return render_template("authenticate.html", 
                            artistpage=subdomain.name, errortext=errorText)
 
 ## files are stored in DB as markdown then converted to HTML when pulled
-@app.route('/r/<artistpage>/work/<worktitle>')
+@subdomain.route('/work/<worktitle>')
 def displaywork(artistpage, worktitle):
     subdomain = Subdomain(getSubdomainID(artistpage))
 
     if not subdomain.verifyAuth():
-        return redirect(url_for('authenticate', artistpage=subdomain.name))
+        return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
 
     text = subdomain.getWork(worktitle)
     if text is None:

@@ -69,6 +69,6 @@ def subdomain_req(f):
     def decorated_function(*args, **kwargs):
         if current_user.subdomainID is None:
             flash('Please register an Artist Site to access that page', 'errorMessage')
-            return redirect(url_for('account'))
+            return redirect(url_for('settings.account'))
         return f(*args, **kwargs)
     return decorated_function

@@ -24,7 +24,9 @@ login_manager.login_message_category = "errorMessage"
 ### set SQLite3 dB location
 DB_LOCATION = "file:/home/jacob/Projects/ArtistsForArtists/artforart.db"
 
-import ArtistsForArtists.routes
+import ArtistsForArtists.routes as routes
+app.register_blueprint(routes.subdomain)
+app.register_blueprint(routes.settings)
 
 '''
 # Session Cookies
