@@ -30,17 +30,13 @@ def load_user(user_id):
 
 ## routing for JSON fetch('/darkmode')
 ### allows for Dark Mode button selection to carry over from page to page
-### does not change the user's pref
-@app.route("/darkmode", methods=["GET", "POST"])
+@app.route("/darkmode", methods=["POST"])
 def darkmode():
-    if request.method == "POST":
-        if session.get('darkmode') is None:
-            session['darkmode'] = 1
-        else:
-            session['darkmode'] = not session['darkmode']
-        return {'darkmode_val': session['darkmode']}
+    if session.get('darkmode') is None:
+        session['darkmode'] = 1
     else:
-        abort(403)
+        session['darkmode'] = not session['darkmode']
+    return {'darkmode_val': session['darkmode']}
 
 ## see: dbOpenDict()
 @app.teardown_appcontext
