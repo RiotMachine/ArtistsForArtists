@@ -10,13 +10,13 @@ https://youtu.be/7maRUPDGiE4
 
 ### Description:
 
-There will be two kinds of account, tentatively named Artist and Viewer.
+There will be two kinds of account, Artist and Viewer.
 
-An Artist is allowed one URL path for their work of the type 'domainname.com/artistpage/...' Artists can make their works password protected, and can style their URL path with custom CSS.
+An Artist is allowed one URL path for their work of the type 'domainname.com/artistpage/...' Artists can make their works password protected, and can custom style their URL path.
 
-Viewers will be able to create accounts to store favorite artist pages for which they are credentialed. They will also be able to comment on works and interact with artists and other users, enabling social networking of artists and fans.
+Viewers will be able to create accounts to store favorite artist pages. They will also be able to comment on works and interact with artists and other users, enabling social networking of artists and fans.
 
-Individuals without accounts will still be able to read artist pages. If an artist page is password protected these guests will need to recredential themselves each time they access the site in a new browser session.
+Individuals without accounts will still be able to read artist pages. If an artist page is password protected these guests will need to recredential themselves each time they access the site in a new browser session or if the credential changes.
 
 AfA stores artists' work in a database which is accessed to generate an index of each artist's work and as well as pages containing those works. Future iterations will provide assistance for work creation, submissions tracking, and submissions formatting.
 
@@ -48,7 +48,7 @@ As a writer myself, AfA seeks to address the following qualms of mine with exist
 
     Not all artists are alive. We want users to be individuals who log into the site, artist or no. We want to allow the option for artists pages for individuals who are no longer with us.
 
-4. Custom CSS for artist pages
+4. Custom CSS settings for artist pages
 
     Artists can be finicky. They should have the option to customize their artist page within reason.
 
@@ -66,7 +66,7 @@ The default landing page contains an index of all Artist pages on the platform. 
 
 ##### Artist-specific URLs
 
-Each artist-specific URL contains an About Me page and Works index. This URL can have custom CSS settings.
+Each artist-specific URL contains an About Me page and Works index.
 
 - About Me
 
@@ -82,14 +82,13 @@ The site is a Flask app using jinja2 templates running on top of a SQLITE databa
 
 ##### SQL database
 
-The database has 4 central tables: 
+The database has 3 central tables: 
 
 - Users
-- Artists
 - Subdomains
 - Works
 
-    Subdomains and works are linked to artists. The subdomain table is used to store the artist's settings for his/her URL path. The works table is used to store the works the artist uploads. The users table links to the subdomains table in the case that a user has an artist page.
+     Works are linked to a single subdomain. The subdomain table is used to store the artist's settings for his/her URL path. The works table is used to store the works the artist uploads. The users table links to the subdomains table in the case that a user has an artist page.
 
 ##### Python/Flask backend
 
@@ -97,7 +96,7 @@ The site runs on app.py and helpers.py.
 
 - app.py
 
-    app.py contains, from top to bottom, containers for invalid url-handling, authentication, and site functionality. The <artistpage> variable pulled from URLs is key to the dynamic functioning of the site in its current iteration. 
+    The <artistpage> variable pulled from URLs is key to the dynamic functioning of the site in its current iteration. 
 
     Of particular note, displaywork(artistpage, worktitle) makes use of pandoc and pypandoc to dynamically format works. Works are stored in the dB as markdown and are converted using this software and wrapper into HTML upon user-access.
 
@@ -147,15 +146,7 @@ Static contains global CSS, AfA-specific CSS, global JS, and Artist page-specifi
 
 #### Future improvements
 
-- Store dark mode/light mode settings
-
-- Optimize for mobile compatibility
-
 - Expand rendered html special char escaping
-
-- Dynamically add workindex.html genre headers based on applicable genres pulled from SQL query
-
-- Nesting of Artist page static files within page-specific directories
 
 - Expanded functionalities for visual and auditory artists
 
@@ -170,4 +161,4 @@ Static contains global CSS, AfA-specific CSS, global JS, and Artist page-specifi
     ### Dependencies
 
     #### External Dependencies
-    - sqlite3
+    - 
