@@ -3,6 +3,4 @@ dev_notes/
 venv/
 ArtistsForArtists/__pycache__
 ArtistsForArtists/static/*.jpeg
-ArtistsForArtists/static/css
-ArtistsForArtists/static/dev/node*
-ArtistsForArtists/static/dev/package*
+AfAFrontend/node_modules
