@@ -1,16 +1,15 @@
 import urllib.parse as urllib
-from flask import (Blueprint, abort, flash, g, jsonify, make_response, redirect, 
-                    render_template, request, session, url_for)
-from flask_login import current_user, login_required, login_user, logout_user
-from pypandoc import convert_text
-from werkzeug.exceptions import BadRequest
-from werkzeug.security import check_password_hash, generate_password_hash
-from ArtistsForArtists import app, login_manager
-from ArtistsForArtists.helpers import (allowedFile, dbQuery, getPrevURL, getSubdomainID, noCache, 
+from flask                      import (Blueprint, abort, flash, g, jsonify, make_response, redirect, 
+                                        render_template, request, session, url_for)
+from flask_login                import current_user, login_required, login_user, logout_user
+import pypandoc
+import werkzeug.exceptions
+from werkzeug.security          import check_password_hash as check_pass, generate_password_hash
+from ArtistsForArtists          import app, login_manager
+from ArtistsForArtists.helpers  import (allowedFile, dbQuery, getPrevURL, getSubdomainID, noCache, 
                                         userInput, loggedOutReq, subdomainReq)
-from ArtistsForArtists.forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
-                                        NewWorkForm, RegisterForm, SubdomainSettingsForm)
-from ArtistsForArtists.classes import Subdomain, User, Work
+import ArtistsForArtists.forms as wtforms
+from ArtistsForArtists.classes  import Subdomain, User, Work
 
 subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<artistpage>', template_folder='templates/subdomains')
 settings = Blueprint('settings', __name__, url_prefix='/account', template_folder='templates/settings')
@@ -65,7 +64,7 @@ def handle_invalid_url(e):
     flash('You cant get there that way.', 'errorMessage')
     return redirect(url_for('homepage'))
 
-@app.errorhandler(BadRequest)
+@app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_misc_bad_request(e):
     return redirect('/', code=400)
 
@@ -75,7 +74,7 @@ def handle_misc_bad_request(e):
 @loggedOutReq
 def register():
 
-    form = RegisterForm()
+    form = wtforms.RegisterForm()
     username = form.username.data
     password = form.password.data
 
@@ -102,14 +101,14 @@ def register():
 @loggedOutReq
 def login():
 
-    form = LoginForm()
+    form = wtforms.LoginForm()
     username = form.username.data
     password = form.password.data
 
     if form.validate_on_submit():
         userInfo = dbQuery("SELECT id, username, passwordhash FROM users WHERE username = ?", 
                             [username], jen=True)
-        if userInfo is None or not check_password_hash(userInfo['passwordhash'], password):
+        if userInfo is None or not check_pass(userInfo['passwordhash'], password):
             flash("Your username or password is incorrect", 'errorMessage')
             response = make_response(render_template("login.html", form=form))
         else:
@@ -153,7 +152,7 @@ def accountSettings():
     for prefQuery in prefsQuery:
         prefs.append(prefQuery['prefString'])
 
-    form = ChangePassForm()
+    form = wtforms.ChangePassForm()
     passErrorMsg = None
 
     if form.validate_on_submit():
@@ -161,7 +160,7 @@ def accountSettings():
         changepassBool = False
 
         if form.oldpass.data:
-            if not check_password_hash(current_user.passhash, form.oldpass.data):
+            if not check_pass(current_user.passhash, form.oldpass.data):
                 passErrorMsg = "Enter the correct current password if you want to change it"
                 errorBool = True
             else:
@@ -192,14 +191,14 @@ def subdomainSettings():
     subdomain = Subdomain(current_user.subdomainID)
     works = subdomain.getWorksTable()
 
-    form = SubdomainSettingsForm()
+    form = wtforms.SubdomainSettingsForm()
     passErrorMsg = None
 
     if form.validate_on_submit():
         changepassBool = False
         # Only displaying the change pass option if authreqBool
         if form.oldpass.data:
-            if not check_password_hash(subdomain.authPassHash, userInput("oldpass")):
+            if not check_pass(subdomain.authPassHash, userInput("oldpass")):
                 passErrorMsg = "Provide the correct current password to change it"
             else:
                 changepassBool = True
@@ -227,7 +226,7 @@ def subdomainSettings():
 @login_required
 @subdomainReq
 def subdomainAddAuth():
-    form = NewPassForm()
+    form = wtforms.NewPassForm()
 
     if form.validate_on_submit():
         dbQuery("UPDATE subdomains SET authpasshash = ?, authreq = 1 WHERE id = ?", 
@@ -243,7 +242,7 @@ def subdomainAddAuth():
 @login_required
 @subdomainReq
 def subdomainAddText():
-    form = NewWorkForm()
+    form = wtforms.NewWorkForm()
     form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
 
     if form.validate_on_submit():
@@ -264,7 +263,7 @@ def subdomainAddText():
             elif file and allowedFile(file.filename):
                 filetext = file.read()
                 extension = file.filename.rsplit('.', 1)[1].lower()
-                text = convert_text(filetext, 'md', format=extension)
+                text = pypandoc.convert_text(filetext, 'md', format=extension)
                 textUpload = True
             else:
                 flash('Invalid file type', 'errorMessage')
@@ -277,7 +276,7 @@ def subdomainAddText():
 @login_required
 @subdomainReq
 def subdomainModifyText():
-    form = ModifyWorkForm()
+    form = wtforms.ModifyWorkForm()
 
     if userInput("workID"):
         work = Work(userInput("workID"))
@@ -346,7 +345,7 @@ def aboutme(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
 
     aboutmeRow = subdomain.getAboutmeRow()
-    htmlAboutme = convert_text(aboutmeRow['aboutme'], 'html', format='md')
+    htmlAboutme = pypandoc.convert_text(aboutmeRow['aboutme'], 'html', format='md')
     hasphoto = aboutmeRow['hasphoto']
 
     return render_template("aboutme.html", 
@@ -371,7 +370,7 @@ def authenticate(artistpage):
 
     if request.method == "POST":
         authTry = userInput('password')
-        if check_password_hash(subdomain.authPassHash, authTry):
+        if check_pass(subdomain.authPassHash, authTry):
             session[subdomain.name] = authTry
             return redirect(url_for('subdomain.workindex', artistpage=subdomain.name))
         else:
@@ -394,7 +393,7 @@ def displaywork(artistpage, worktitle):
     text = subdomain.getWork(worktitle)
     if text is None:
         abort(404)
-    htmlText = convert_text(text['content'], 'html', format='md')
+    htmlText = pypandoc.convert_text(text['content'], 'html', format='md')
    
     return render_template("text.html", 
                            artistpage=subdomain.name, worktitle=worktitle, 

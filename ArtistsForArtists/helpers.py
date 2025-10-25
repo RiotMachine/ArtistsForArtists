@@ -1,9 +1,9 @@
 import functools
 import urllib.parse as urllib
 import sqlite3
-from flask import abort, flash, g, redirect, request, url_for
-from flask_login import current_user
-from ArtistsForArtists import DB_LOCATION
+from flask              import abort, flash, g, redirect, request, url_for
+from flask_login        import current_user
+from ArtistsForArtists  import DB_LOCATION
 
 # Functions
 
