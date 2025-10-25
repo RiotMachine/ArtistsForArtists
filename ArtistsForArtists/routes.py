@@ -11,7 +11,7 @@ from ArtistsForArtists.helpers  import (allowedFile, dbQuery, getPrevURL, getSub
 import ArtistsForArtists.forms as wtforms
 from ArtistsForArtists.classes  import Subdomain, User, Work
 
-subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<artistpage>', template_folder='templates/subdomains')
+subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<subName>', template_folder='templates/subdomains')
 settings = Blueprint('settings', __name__, url_prefix='/account', template_folder='templates/settings')
 
 GENRES = None
@@ -336,13 +336,13 @@ def search():
     
 # Subdomain Pages
 @subdomain.route('/')
-def artistpage(artistpage):
-    subdomain = Subdomain(getSubdomainID(artistpage))
+def artistpage(subName):
+    subdomain = Subdomain(getSubdomainID(subName))
     return render_template("artistpage.html", artistpage=subdomain.name)
 
 @subdomain.route('/aboutme')
-def aboutme(artistpage):
-    subdomain = Subdomain(getSubdomainID(artistpage))
+def aboutme(subName):
+    subdomain = Subdomain(getSubdomainID(subName))
 
     aboutmeRow = subdomain.getAboutmeRow()
     htmlAboutme = pypandoc.convert_text(aboutmeRow['aboutme'], 'html', format='md')
@@ -353,8 +353,8 @@ def aboutme(artistpage):
                            htmlAboutme=htmlAboutme)
 
 @subdomain.route('/work')
-def workindex(artistpage):
-    subdomain = Subdomain(getSubdomainID(artistpage))
+def workindex(subName):
+    subdomain = Subdomain(getSubdomainID(subName))
     
     if not subdomain.verifyAuth():
         return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
@@ -364,8 +364,8 @@ def workindex(artistpage):
                            genres = GENRES)
 
 @subdomain.route('/authenticate', methods=["GET", "POST"])
-def authenticate(artistpage):
-    subdomain = Subdomain(getSubdomainID(artistpage))
+def authenticate(subName):
+    subdomain = Subdomain(getSubdomainID(subName))
     errorText = None
 
     if request.method == "POST":
@@ -384,8 +384,8 @@ def authenticate(artistpage):
 
 ## files are stored in DB as markdown then converted to HTML when pulled
 @subdomain.route('/work/<worktitle>')
-def displaywork(artistpage, worktitle):
-    subdomain = Subdomain(getSubdomainID(artistpage))
+def displaywork(subName, worktitle):
+    subdomain = Subdomain(getSubdomainID(subName))
 
     if not subdomain.verifyAuth():
         return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
