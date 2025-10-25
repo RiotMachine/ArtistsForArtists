@@ -1,20 +1,22 @@
 {% extends "siteTemplate.html" %}
 
-{% block main %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/search.js') }}" defer></script>
+{% endblock %}
 
-<h3>Artist Pages</h3>
+{% block legend %}
+<h2>Artist Pages</h2>
 <h4>Use the search bar below to find your favorite author's page!</h4>
+{% endblock %}
 
+{% block content %}
 <form action="{{ url_for('search') }}" method="get">
     <input autocomplete="off" autofocus name="q" type="search">
     <button type="submit">Search</button>
 </form>
 <ul id="jsSearch">
-    {% for pagename in pagenames %}
-    <li><a href="/r/{{ pagename }}">{{ pagename }}</a></li>
+    {% for subName in subNames %}
+    <li><a href="{{ url_for('subdomain.index', subName=subName) }}">{{ subName }}</a></li>
     {% endfor %}
 </ul>
-
-<script src="{{ url_for('static', filename='js/search.js') }}"></script>
-
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends "siteTemplate.html" %}
 
 {% block main %}
-
 <form action="{{ url_for('login') }}" method="post">
 	{{ form.csrf_token }}
 	<div class="mb-3">
@@ -24,5 +23,4 @@
 		<button class="btn btn-primary w-auto" type="submit">Log In</button>
 	</div>
 </form>
-
 {% endblock %}

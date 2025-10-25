@@ -52,7 +52,8 @@ def handle_admin_url(e):
 
 @app.errorhandler(404)
 def handle_invalid_url(e):
-    return render_template("apology.html"), 404
+    flash('That url does not exist.')
+    return redirect(url_for('homepage'))
 
 @app.errorhandler(405)
 def handle_invalid_url(e):
@@ -61,7 +62,7 @@ def handle_invalid_url(e):
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_misc_bad_request(e):
-    return redirect('/', code=400)
+    return redirect(url_for('homepage'), code=400)
 
 
 # AfA Pages
@@ -71,21 +72,21 @@ def homepage():
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
-    subdomainsList = []
+    subNamesList = []
     q = request.args.get("q")
 
     if q:
-        subdomains = dbQuery("SELECT pagename FROM subdomains WHERE pagename LIKE ? LIMIT 5", 
+        subNames = dbQuery("SELECT pagename FROM subdomains WHERE pagename LIKE ? LIMIT 5", 
                              ["%" + q + "%"])
     else:
-        subdomains = dbQuery("SELECT pagename FROM subdomains")
-    for subdomain in subdomains:
-        subdomainsList.append(subdomain['pagename'])
+        subNames = dbQuery("SELECT pagename FROM subdomains")
+    for subName in subNames:
+        subNamesList.append(subName['pagename'])
 
     if request.method == "GET":
-        return render_template("search.html", pagenames=subdomainsList)
+        return render_template("search.html", subNames=subNamesList)
     if request.method == "POST":
-        return subdomainsList
+        return subNamesList
 
 
 # User Auth Pages
@@ -333,7 +334,7 @@ def subdomainTextDelete():
 @subdomain.route('/')
 def index(subName):
     subdomain = Subdomain(getSubdomainID(subName))
-    return render_template("subIndex.html", artistpage=subdomain.name)
+    return render_template("subIndex.html", subName=subdomain.name)
 
 @subdomain.route('/aboutme')
 def aboutme(subName):
@@ -341,10 +342,10 @@ def aboutme(subName):
 
     aboutmeRow = subdomain.getAboutmeRow()
     htmlAboutme = pypandoc.convert_text(aboutmeRow['aboutme'], 'html', format='md')
-    hasphoto = aboutmeRow['hasphoto']
+    hasphoto = bool(aboutmeRow['hasphoto'])
 
     return render_template("subAboutme.html", 
-                           artistpage=subdomain.name, hasphoto=hasphoto, 
+                           subName=subdomain.name, hasphoto=hasphoto, 
                            htmlAboutme=htmlAboutme)
 
 @subdomain.route('/work')
@@ -355,27 +356,28 @@ def works(subName):
         return redirect(url_for('subdomain.authenticate', subName=subdomain.name))
 
     return render_template("subWorks.html", 
-                           artistpage=subdomain.name, worktitles=subdomain.getWorksList(),
+                           subName=subdomain.name, works=subdomain.getWorksList(),
                            genres = GENRES)
 
 @subdomain.route('/authenticate', methods=["GET", "POST"])
 def authenticate(subName):
     subdomain = Subdomain(getSubdomainID(subName))
+    form = wtforms.AuthForm()
     errorText = None
 
-    if request.method == "POST":
-        authTry = userInput('password')
+    if form.validate_on_submit():
+        authTry = form.password.data
         if check_pass(subdomain.authPassHash, authTry):
             session[subdomain.name] = authTry
             return redirect(url_for('subdomain.works', subName=subdomain.name))
         else:
             errorText = "Sorry, that password is incorrect."
 
-    if subdomain.verifyAuth():
+    elif subdomain.verifyAuth():
         return redirect(url_for('subdomain.works', subName=subdomain.name))
 
-    return render_template("subAuth.html", 
-                           artistpage=subdomain.name, errortext=errorText)
+    return render_template("subAuth.html", form=form,
+                           subName=subdomain.name, errortext=errorText)
 
 ## files are stored in DB as markdown then converted to HTML when pulled
 @subdomain.route('/work/<worktitle>')
@@ -391,5 +393,5 @@ def text(subName, worktitle):
     htmlText = pypandoc.convert_text(text['content'], 'html', format='md')
    
     return render_template("subText.html", 
-                           artistpage=subdomain.name, worktitle=worktitle, 
+                           subName=subdomain.name, worktitle=worktitle, 
                            artist=subdomain.getArtistName(), htmlText=htmlText)

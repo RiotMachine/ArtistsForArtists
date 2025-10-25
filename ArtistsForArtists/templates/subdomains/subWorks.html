@@ -1,18 +1,20 @@
 {% extends "subTemplate.html" %}
 
-{% block main %}
+{% block content %}
 
 {% for genre in genres %}
 	<!-- utilizing this solution: https://stackoverflow.com/questions/9486393/change-the-value-of-a-variable-inside-a-loop -->
 	{% set var = namespace(genreEmpty=true) %}
-	{% for worktitle in worktitles %}
-		{% if worktitle["genreString"] == genre["genreString"] %}
+	{% for work in works %}
+		{% if work["genreString"] == genre["genreString"] %}
 			{% if var.genreEmpty %}
 				<h3>{{ genre["genreString"] }}</h3>
 				<ul>
 				{% set var.genreEmpty = false %}
 			{% endif %}
-			<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
+			<li>
+				<a href="{{ url_for('.text', subName=subName, worktitle=work['title']) }}">{{ work["title"] }}</a>
+			</li>
 		{% endif %}
 	{% endfor %}
 	{% if not var.genreEmpty %}

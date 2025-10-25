@@ -1,18 +1,18 @@
 {% extends "template.html" %}
 
-{% block head %}
-<title>{{ artistpage }}</title>
+{% block pageTitle %}
+{{ subName }}
 {% endblock %}
 
-{% block header %}
-<h1><a href="/r/{{ artistpage }}">{{ artistpage }}</a></h1>
+{% block pageIndex %}
+<a href="{{ url_for('.index', subName=subName) }}">{{ subName }}</a>
 {% endblock %}
 
 {% block sidebar %}
 <li class="nav-item">
-	<a class="nav-link" href="/r/{{ artistpage }}/work">Work Index</a>
+	<a class="nav-link" href="{{ url_for('.works', subName=subName) }}">Work Index</a>
 </li>
 <li class="nav-item">
-	<a class="nav-link" href="/r/{{ artistpage }}/aboutme">About Me</a>
+	<a class="nav-link" href="{{ url_for('.aboutme', subName=subName) }}">About Me</a>
 </li>
 {% endblock %}

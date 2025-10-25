@@ -10,12 +10,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" 
             integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+        <title>
+            {% block pageTitle %}{% endblock %}
+        </title>
+        <link href="{{ url_for('static', filename='css/global.css') }}" rel="stylesheet">
+        <script src="{{ url_for('static', filename='js/global.js') }}" async></script>
         {% block head %}{% endblock %}
-        <link href="{{ url_for('static', filename='css/globalstyle.css') }}" rel="stylesheet">
-        <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     </head>
     <body>
         <header>
+            <button class="btn btn-secondary" id="darkmode">
+                Dark Mode
+            </button>
+            <h1>
+                {% block pageIndex %}{% endblock %}
+            </h1>
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Account
             </button>
@@ -28,8 +37,6 @@
                 <li><a class="dropdown-item" href="{{ url_for('login') }}">Log In</a></li>
                 {% endif %}
             </ul>
-            <button class="btn btn-secondary" id="darkmode">Dark Mode</button>
-            {% block header %}{% endblock %}
             <hr>
         </header>
         <aside>
@@ -43,18 +50,20 @@
             <a href="{{ url_for('homepage') }}" class="btn btn-primary btn-sm">Artists for Artists</a>
         </aside>
         <main>
+            {% block legend %}{% endblock %}
             {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <h3 class="{{ category }}">{{ message }}</h3>
-                {% endfor %}
-            {% endif %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <h3 class="{{ category }}">{{ message }}</h3>
+                    {% endfor %}
+                {% endif %}
             {% endwith %}
-            {% block main %}{% endblock %}
+            {% block content %}{% endblock %}
         </main>
         <footer>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" 
             integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+        {% block jquery %}{% endblock %}
     </body>
 </html>

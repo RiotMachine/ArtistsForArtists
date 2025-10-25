@@ -20,12 +20,14 @@ class RequiredIf(InputRequired):
             super().__call__(form, field)
 
 
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[
-        InputRequired(message='You must provide a username')
-        ])
+class AuthForm(FlaskForm):
     password = PasswordField('Password', validators=[
         InputRequired(message='You must provide a password')
+        ])
+
+class LoginForm(AuthForm):
+    username = StringField('Username', validators=[
+        InputRequired(message='You must provide a username')
         ])
     rememberMe = BooleanField('Remember me')
 
