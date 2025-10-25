@@ -1,0 +1,28 @@
+{% extends "acctTemplate.html" %}
+
+{% block main %}
+
+<!--Table of static user data-->
+<div class="container col-4">
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="text-center" colspan="4">Account Details</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			<tr>
+				<th class="col-2" scope="row">Username:</th>
+				<td class="col-2">{{ current_user.username }}</td>
+			</tr>
+			{% if subdomain is not none %}
+			<tr>
+				<th class="col-2" scope="row">Subdomain:</th>
+				<td class="col-2">{{ subdomain['pagename'] }}</td>
+			</tr>
+			{% endif %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

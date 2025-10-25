@@ -1,0 +1,10 @@
+{% extends "subTemplate.html" %}
+
+{% block main %}
+
+<h2>{{ worktitle }}</h2>
+<h3>by {{ artist }}</h3>
+
+{{ htmlText | safe }}
+
+{% endblock %}

@@ -1,27 +1,14 @@
-{% extends "accounttemplate.html" %}
+{% extends "acctTemplate.html" %}
 
 {% block head %}
-<!--jQuery dependency-->
-<!--from Google library https://developers.google.com/speed/libraries?csw=1#jquery-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- CDN for DataTables -->
-<!-- https://datatables.net/ -->
-<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" />
-<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+	{% include "CDNs/jQuery.html" %}
+	{% include "CDNs/DataTables.html" %}
 {% endblock %}
 
 {% block main %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-		{% for category, message in messages %}
-<h3 class="{{ category }}">{{ message }}</h3>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
-
 <h3 class="col text-center">Subdomain Settings</h3>
-<form action="/account/subdomain" method="post">
+<form action="{{ url_for('account.subdomainSettings') }}" method="post">
 	{{ form.csrf_token }}
 	{% if authreqBool %}
 	<h5>Change password</h5>
@@ -70,14 +57,12 @@
 	</div>
 </form>
 
-<div id="divider">
-	<hr>
-</div>
+<hr>
 
 <!--Table of one's works wherein one can manage adding modifying and deleting-->
 <h3 class="col text-center">Works</h3>
 <form method="post">
-	<table class="table table-hover" id="myTable">
+	<table class="table table-hover" id="dataTable">
 		<thead>
 			<tr>
 				<th scope="col"></th>
@@ -102,31 +87,21 @@
 		</tbody>
 	</table>
 	<div class="col text-center">
-		<button class="btn btn-success w-auto" formaction="{{ url_for('settings.subdomainAddText') }}"
+		<button class="btn btn-success w-auto" formaction="{{ url_for('account.subdomainTextAdd') }}"
 				value="New" type="submit" name="workAction">
 			Add
 		</button>
-		<button class="btn btn-warning w-auto" formaction="{{ url_for('settings.subdomainModifyText') }}"
+		<button class="btn btn-warning w-auto" formaction="{{ url_for('account.subdomainTextEdit') }}"
 				value="Modify" type="submit" name="workAction">
 			Modify
 		</button>
-		<button class="btn btn-danger w-auto" formaction="{{ url_for('settings.subdomainDeleteText') }}"
+		<button class="btn btn-danger w-auto" formaction="{{ url_for('account.subdomainTextDelete') }}"
 				value="Delete" type="submit" name="workAction">
 			Delete
 		</button>
 	</div>
 </form>
 
-<script>
-	$(document).ready(function () {
-		$('#myTable').DataTable();
-	});
-
-	$('#myTable').DataTable({
-		columnDefs: [{ orderable: false, targets: 0 }],
-		order: []
-	})
-</script>
-
+<script src="{{ url_for('static', filename='js/DataTables.js') }}"></script>
 
 {% endblock %}

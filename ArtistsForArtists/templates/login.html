@@ -1,16 +1,8 @@
-{% extends "sitetemplate.html" %}
+{% extends "siteTemplate.html" %}
 
 {% block main %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-		{% for category, message in messages %}
-<h3 class="{{ category }}">{{ message }}</h3>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
-
-<form action="/login" method="post">
+<form action="{{ url_for('login') }}" method="post">
 	{{ form.csrf_token }}
 	<div class="mb-3">
 		{{ form.username(placeholder="Username", class="form-control mx-auto w-auto") }}
@@ -24,7 +16,7 @@
 		<p class="errorMessage">{{ error }}</p>
 		{% endfor %}
 	</div>
-	<div class="col text-center" id="permseshcheck">
+	<div class="col text-center">
 		{{ form.rememberMe(class="form-check-input") }}
 		{{ form.rememberMe.label(class="form-check-label") }}
 	</div>
@@ -32,4 +24,5 @@
 		<button class="btn btn-primary w-auto" type="submit">Log In</button>
 	</div>
 </form>
+
 {% endblock %}

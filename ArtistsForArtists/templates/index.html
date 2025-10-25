@@ -1,16 +1,8 @@
-{% extends "sitetemplate.html" %}
+{% extends "siteTemplate.html" %}
 
 
 {% block main %}
 
 <h2>Welcome to Artists for Artists</h2>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-		{% for category, message in messages %}
-<h3 class="{{ category }}">{{ message }}</h3>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
 
 {% endblock %}

@@ -1,23 +1,12 @@
-{% extends "accounttemplate.html" %}
+{% extends "acctTemplate.html" %}
 
 {% block head %}
-<!-- CDN for EasyMDE -->
-<!-- https://github.com/Ionaru/easy-markdown-editor -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+	{% include "CDNs/EasyMDE.html" %}
 {% endblock %}
 
 {% block main %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-		{% for category, message in messages %}
-<h3 class="{{ category }}">{{ message }}</h3>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
-
-<form action="{{ url_for('settings.subdomainAddText') }}" method=post enctype=multipart/form-data>
+<form action="{{ url_for('account.subdomainTextAdd') }}" method=post enctype=multipart/form-data>
 	<div class="g-0 row">
 		<label for="formFile" class="form-label">Upload a text</label>
 		<input class="form-control w-25 col-auto" type=file name="fileUpload" id="formFile">
@@ -27,7 +16,7 @@
 	</div>
 </form>
 
-<form action="{{ url_for('settings.subdomainAddText') }}" method="post">
+<form action="{{ url_for('account.subdomainTextAdd') }}" method="post">
 	{{ form.csrf_token }}
 	<h5>Title</h5>
 	{{ form.newTitle(class="form-control w-50") }}
@@ -63,7 +52,7 @@
 	{% endfor %}
 	<div class="col text-center">
 		<button class="btn btn-primary w-auto" type="submit">Submit</button>
-		<a class="btn btn-secondary w-auto" href="{{ url_for('settings.subdomainSettings') }}">Reset</a>
+		<a class="btn btn-secondary w-auto" href="{{ url_for('account.subdomainSettings') }}">Reset</a>
 	</div>
 </form>
 

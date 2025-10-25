@@ -1,7 +1,8 @@
-{% extends "subdomaintemplate.html" %}
+{% extends "subTemplate.html" %}
 
 {% block main %}
-<h2 class="bottom">Authentication Required</h2>
+
+<h2>Authentication Required</h2>
 <form method="POST">
 	<div class="form-group">
 		<label for="subdomainpassword" id="authlabel">Enter {{ artistpage }}'s password to access their works.</label>
@@ -12,4 +13,5 @@
 {% if errortext is not none %}
 <p class="errorMessage">{{ errortext }}</p>
 {% endif %}
+
 {% endblock %}

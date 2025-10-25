@@ -1,32 +1,20 @@
-{% extends "sitetemplate.html" %}
-
+{% extends "siteTemplate.html" %}
 
 {% block main %}
-<h3 id="homepageBanner">Artist Pages</h3>
+
+<h3>Artist Pages</h3>
 <h4>Use the search bar below to find your favorite author's page!</h4>
-<form action="/search" method="get">
+
+<form action="{{ url_for('search') }}" method="get">
     <input autocomplete="off" autofocus name="q" type="search">
     <button type="submit">Search</button>
 </form>
-<ul id="subdomainList">
+<ul id="jsSearch">
     {% for pagename in pagenames %}
     <li><a href="/r/{{ pagename }}">{{ pagename }}</a></li>
     {% endfor %}
 </ul>
 
-<script>
-	let input = document.querySelector('input');
-	input.addEventListener('input', async function () {
-		let response = await fetch('/search?q=' + input.value, {
-			method: "POST",
-		});
-		let subdomains = await response.json();
-		let html = '';
-		for (let i in subdomains) {
-			let subdomain = subdomains[i].replace('<', '&lt;').replace('&', '&amp;');
-			html += '<li><a href=\"/r/' + subdomain + '\">' + subdomain + '</a></li>';
-		}
-		document.querySelector('#subdomainList').innerHTML = html;
-	});
-</script>
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
 {% endblock %}

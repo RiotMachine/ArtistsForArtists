@@ -1,7 +1,8 @@
-{% extends "sitetemplate.html" %}
+{% extends "siteTemplate.html" %}
 
 {% block main %}
-<form action="/register" method="post">
+
+<form action="{{ url_for('register') }}" method="post">
 	{{ form.csrf_token }}
 	<div class="mb-3">
 		{{ form.username(placeholder="Username", class="form-control mx-auto w-auto") }}
@@ -21,7 +22,7 @@
 		<p class="errorMessage">{{ error }}</p>
 		{% endfor %}
 	</div>
-	<div class="col text-center" id="permseshcheck">
+	<div class="col text-center">
 		{{ form.rememberMe(class="form-check-input") }}
 		{{ form.rememberMe.label(class="form-check-label") }}
 	</div>
@@ -29,4 +30,5 @@
 		<button class="btn btn-primary w-auto" type="submit">Register</button>
 	</div>
 </form>
+
 {% endblock %}

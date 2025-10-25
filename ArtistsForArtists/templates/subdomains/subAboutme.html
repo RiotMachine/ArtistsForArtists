@@ -1,0 +1,12 @@
+{% extends "subTemplate.html" %}
+
+{% block main %}
+
+<h2>About Me</h2>
+
+{{ htmlAboutme | safe }}
+{% if hasphoto == 1 %}
+	<img src="/static/{{ artistpage }}.jpeg" alt="Artist photo">
+{% endif %}
+
+{% endblock %}

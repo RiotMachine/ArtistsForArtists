@@ -1,8 +1,8 @@
-{% extends "accounttemplate.html" %}
+{% extends "acctTemplate.html" %}
 
 {% block main %}
 
-<form action="/account/subdomain/addauth" method="post">
+<form action="{{ url_for('subdomainAuthEdit') "}} method="post">
 	{{ form.csrf_token }}
 	<h5>Add authentication</h5>
 	<div class="mb-3">
@@ -23,4 +23,5 @@
 		<button class="btn btn-primary w-auto" type="submit">Submit</button>
 	</div>
 </form>
+
 {% endblock %}

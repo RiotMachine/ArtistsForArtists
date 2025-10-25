@@ -1,17 +1,9 @@
-{% extends "accounttemplate.html" %}
+{% extends "acctTemplate.html" %}
 
 {% block main %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-		{% for category, message in messages %}
-		<h3 class="{{ category }}">{{ message }}</h3>
-		{% endfor %}
-	{% endif %}
-{% endwith %}
-
 <h3 class="col text-center">User Settings</h3>
-<form action="/account/settings" method="post">
+<form action="{{ url_for('account.settings') }}" method="post">
 	{{ form.csrf_token }}
 	<h5>Change password</h5>
 	<div class="mb-3">
