@@ -6,9 +6,15 @@
 
 {% block content %}
 
-{{ htmlAboutme | safe }}
-{% if hasphoto %}
-	<img src="{{ url_for('static', filename=subName+'.jpeg') }}" alt="Artist photo">
-{% endif %}
+<div class="row align-items-center">
+	<div class="col">
+		{{ htmlAboutme | safe }}
+	</div>
+	<div class="col">
+		{% if hasphoto %}
+		<img src="{{ url_for('static', filename=subName+'.jpeg') }}" alt="Artist photo" class="img-fluid">
+		{% endif %}
+	</div>
+</div>
 
 {% endblock %}
