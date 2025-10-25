@@ -13,14 +13,12 @@
 	<fieldset>
 		<legend>User preferences</legend>
 		{% for pref in prefs %}
-		<div class="form-check form-switch form-check-inline">
 			{% if userprefs[pref] == true %}
 			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
 			{% else %}
 			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">
 			{% endif %}
 			<label class="form-check-label" for="{{pref}}Check">Make {{ pref }} my default</label>
-		</div>
 		{% endfor %}
 	</fieldset>
 	<button class="btn btn-primary w-auto" type="submit">Submit</button>

@@ -8,24 +8,21 @@
 
 <form action="{{ url_for('.subdomainTextEdit') }}" method="post">
     {{ form.csrf_token }}
-    {{ form.newTitle(value=work['title'], class="form-control w-50") }}
-    <textarea name="workText"></textarea>
-    <script id="workTextQuery" type="application/json">
-    {{ work['content'] | tojson }}
-    </script>
-    <script>
-        let JSONtext = document.getElementById('workTextQuery')
-        let text = JSON.parse(JSONtext.textContent)
-        const easyMDE = new EasyMDE();
-        easyMDE.value(text);
-    </script>
+    
+    <fieldset>
+        {{ form.newTitle(value=work['title']) }}
+    </fieldset>
+
+    <fieldset>
+        <textarea name="workText" id="EasyMDEText">{{ work['content'] }}</textarea>
+    </fieldset>
+
     {% for error in form.newTitle.errors %}
     <p class="errorMessage">{{ error }}</p>
     {% endfor %}
-    <div class="col text-center">
-        <button class="btn btn-primary w-auto" type="submit">Submit</button>
-        <a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>
-    </div>
+
+    <button class="btn btn-primary w-auto" type="submit">Submit</button>
+    <a class="btn btn-secondary w-auto" href="{{ url_for('.subdomainSettings') }}">Reset</a>
 </form>
 
 {% endblock %}

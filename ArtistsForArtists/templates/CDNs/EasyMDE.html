@@ -1,4 +1,6 @@
 <!-- https://github.com/Ionaru/easy-markdown-editor -->
  
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js" await></script>
+<!--Choosing not to defer this one to avoid flash of unstyled <textarea> -->
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script src="{{ url_for('static', filename='js/EasyMDE.js') }}" defer></script>

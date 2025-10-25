@@ -212,14 +212,13 @@ def subdomainSettings():
     works = subdomain.getWorksTable()
 
     form = wtforms.SubdomainSettingsForm()
-    passErrorMsg = None
 
     if form.validate_on_submit():
         changepassBool = False
         # Only displaying the change pass option if authreqBool
         if form.oldpass.data:
             if not check_pass(subdomain.authPassHash, userInput("oldpass")):
-                passErrorMsg = "Provide the correct current password to change it"
+                flash('Settings not saved. Enter the correct current password to change it')
             else:
                 changepassBool = True
 
@@ -239,7 +238,7 @@ def subdomainSettings():
 
     response = make_response(render_template("acctSubSettings.html", 
                                              works=works, authreqBool=subdomain.authReq,
-                                             passErrorMsg=passErrorMsg, form=form))
+                                             form=form))
     return noCache(response)
 
 @account.route("/subdomain/addauth", methods=['POST'])
@@ -273,10 +272,8 @@ def subdomainTextAdd():
 
     else:
         text = None
-        textUpload = False
         if 'fileUpload' in request.files:
             ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
-            textUpload = False
             file = request.files['fileUpload']
             if file.filename == '':
                 flash('No selected file', 'errorMessage')
@@ -284,11 +281,10 @@ def subdomainTextAdd():
                 filetext = file.read()
                 extension = file.filename.rsplit('.', 1)[1].lower()
                 text = pypandoc.convert_text(filetext, 'md', format=extension)
-                textUpload = True
             else:
                 flash('Invalid file type', 'errorMessage')
         response = make_response(render_template("acctSubTxtAdd.html", 
-                                                 form=form, text=text, textUpload=textUpload))
+                                                 form=form, text=text))
 
     return noCache(response)
 
