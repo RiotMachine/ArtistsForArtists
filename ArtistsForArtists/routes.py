@@ -106,7 +106,7 @@ def register():
         else:
             userInfo = dbQuery("INSERT INTO users (username, passwordhash) VALUES (?, ?) "
                                "RETURNING id, username, passwordhash",
-                               [username, generate_password_hash(password)])
+                               [username, generate_password_hash(password)], jen=True)
             user = User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
             login_user(user, remember=form.rememberMe.data)
             flash('Registration successful!', 'successtext')
