@@ -356,8 +356,11 @@ def workindex(artistpage):
     if not subdomain.verifyAuth():
         return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
 
+    genres = dbQuery("SELECT genreString FROM genres")
+
     return render_template("workindex.html", 
-                           artistpage=subdomain.name, worktitles=subdomain.getWorksList())
+                           artistpage=subdomain.name, worktitles=subdomain.getWorksList(),
+                           genres = genres)
 
 @subdomain.route('/authenticate', methods=["GET", "POST"])
 def authenticate(artistpage):

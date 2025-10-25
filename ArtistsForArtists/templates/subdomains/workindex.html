@@ -1,33 +1,28 @@
 {% extends "subdomaintemplate.html" %}
 
 {% block main %}
-	<div class="text">
-		{% for worktitle in worktitles %}
-			{% if worktitle["genreString"] == "Poetry" %}
-				<h3>Poetry</h3>
-				<ul>
-				{% for worktitle in worktitles %}
-					{% if worktitle["genreString"] == "Poetry" %}
-						<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
-					{% endif %}
-				{% endfor %}
-				</ul>
-				{% break %}
-			{% endif %}
-		{% endfor %}
 
+<div class="text">
+	{% for genre in genres %}
+		<!-- utilizing this solution: https://stackoverflow.com/questions/9486393/change-the-value-of-a-variable-inside-a-loop -->
+		{% set var = namespace(genreEmpty=true) %}
 		{% for worktitle in worktitles %}
-			{% if worktitle["genreString"] == "Prose" %}
-				<h3>Prose</h3>
+			{% if worktitle["genreString"] == genre["genreString"] %}
+				<h3>{{ genre["genreString"] }}</h3>
 				<ul>
-				{% for worktitle in worktitles %}
-					{% if worktitle["genreString"] == "Prose" %}
-						<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
-					{% endif %}
-				{% endfor %}
-				</ul>
+				{% set var.genreEmpty = false %}
 				{% break %}
 			{% endif %}
 		{% endfor %}
-	</div>
+		{% if not var.genreEmpty %}
+			{% for worktitle in worktitles %}
+				{% if worktitle["genreString"] == genre["genreString"] %}
+				<li><a href="/r/{{ artistpage }}/work/{{ worktitle["title"] | urlEscape }}">{{ worktitle["title"] }}</a></li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+		{% endif %}
+	{% endfor %}
+</div>
+
 {% endblock %}
