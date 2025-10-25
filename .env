@@ -1,0 +1,1 @@
+FLASK_APP = ArtistsForArtists/__init__.py
