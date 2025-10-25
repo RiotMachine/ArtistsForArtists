@@ -1,6 +1,6 @@
 <fieldset>
     <legend>Title</legend>
-    {% if oldTitle is none %}
+    {% if oldTitle is not defined %}
     {{ form.newTitle }}
     {% else %}
     {{ form.newTitle(value=oldTitle) }}
