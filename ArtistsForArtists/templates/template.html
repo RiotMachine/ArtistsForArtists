@@ -17,10 +17,10 @@
         <script src="{{ url_for('static', filename='js/global.js') }}" async></script>
         {% block head %}{% endblock %}
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <!--This solution was helpful for pushing the footer below the viewport-->
         <!--https://stackoverflow.com/questions/75360163/vertical-align-a-footer-to-the-bottom-of-the-page-bootstrap-5#75362918-->
-        <div class="container-fluid d-flex flex-column min-vh-100">
+        <div class="container-fluid d-flex flex-column flex-grow-1">
             <header>
                 <div class="row align-items-center">
                     <div class="col">
