@@ -15,6 +15,11 @@ from ArtistsForArtists.classes import Subdomain, User, Work
 subdomain = Blueprint('subdomain', __name__, url_prefix='/r/<artistpage>', template_folder='templates/subdomains')
 settings = Blueprint('settings', __name__, url_prefix='/account', template_folder='templates/settings')
 
+GENRES = None
+with app.app_context():
+    GENRES = dbQuery("SELECT id, genreString FROM genres")
+
+
 @login_manager.user_loader
 def load_user(user_id):
     userInfo = dbQuery("SELECT id, username, passwordhash "
@@ -238,9 +243,8 @@ def subdomainAddAuth():
 @login_required
 @subdomain_req
 def subdomainAddText():
-    genres = dbQuery("SELECT id, genreString FROM genres")
     form = NewWorkForm()
-    form.genres.choices = [(genre['id'], genre['genreString']) for genre in genres]
+    form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
 
     if form.validate_on_submit():
         Work.newWork(form.newTitle.data, current_user.subdomainID, 
@@ -356,11 +360,9 @@ def workindex(artistpage):
     if not subdomain.verifyAuth():
         return redirect(url_for('subdomain.authenticate', artistpage=subdomain.name))
 
-    genres = dbQuery("SELECT genreString FROM genres")
-
     return render_template("workindex.html", 
                            artistpage=subdomain.name, worktitles=subdomain.getWorksList(),
-                           genres = genres)
+                           genres = GENRES)
 
 @subdomain.route('/authenticate', methods=["GET", "POST"])
 def authenticate(artistpage):
