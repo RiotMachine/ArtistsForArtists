@@ -91,7 +91,7 @@ class Subdomain():
 
     def changePass(self, newpass):
         dbQuery("UPDATE subdomains SET authpasshash = ? WHERE id = ?", 
-                    [generate_password_hash(newpass), subdomain.id])
+                    [generate_password_hash(newpass), self.id])
 
 
 class Work():
@@ -99,7 +99,7 @@ class Work():
         self.id = id
 
     @classmethod
-    def newWork(cls, title, artistID, content, genreID):
+    def newWork(cls, title, subdomainID, content, genreID):
         newWorkID = dbQuery("INSERT INTO works (title, subdomainID, content, genreID) VALUES (?, ?, ?, ?) "
                             "RETURNING id", [title, subdomainID, content, genreID])
         return cls(newWorkID)

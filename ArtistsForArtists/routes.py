@@ -223,7 +223,7 @@ def subdomainSettings():
                 changepassBool = True
 
         elif form.setauth.data and not subdomain.authReq:
-            response = make_response(redirect(url_for('account.subdomainAddAuth'), code=307))
+            response = make_response(redirect(url_for('account.subdomainAuthEdit'), code=307))
             return noCache(response)
 
         elif not form.setauth.data and subdomain.authReq:

@@ -2,7 +2,7 @@
 
 {% block main %}
 
-<form action="{{ url_for('subdomainAuthEdit') "}} method="post">
+<form action="{{ url_for('account.subdomainAuthEdit') }}" method="post">
 	{{ form.csrf_token }}
 	<h5>Add authentication</h5>
 	<div class="mb-3">
