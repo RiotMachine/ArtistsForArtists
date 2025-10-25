@@ -6,8 +6,8 @@ from pypandoc import convert_text
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import check_password_hash, generate_password_hash
 from ArtistsForArtists import app, login_manager
-from ArtistsForArtists.helpers import (allowed_file, dbQuery, getPrevURL, getSubdomainID, noCache, 
-                                        userInput, loggedin_notallowed, subdomain_req)
+from ArtistsForArtists.helpers import (allowedFile, dbQuery, getPrevURL, getSubdomainID, noCache, 
+                                        userInput, loggedOutReq, subdomainReq)
 from ArtistsForArtists.forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
                                         NewWorkForm, RegisterForm, SubdomainSettingsForm)
 from ArtistsForArtists.classes import Subdomain, User, Work
@@ -72,7 +72,7 @@ def handle_misc_bad_request(e):
 
 # User Auth Pages
 @app.route("/register", methods=["GET", "POST"])
-@loggedin_notallowed
+@loggedOutReq
 def register():
 
     form = RegisterForm()
@@ -99,7 +99,7 @@ def register():
     return noCache(response)
 
 @app.route("/login", methods=["GET", "POST"])
-@loggedin_notallowed
+@loggedOutReq
 def login():
 
     form = LoginForm()
@@ -187,7 +187,7 @@ def accountSettings():
 
 @settings.route("/subdomain", methods=["GET", "POST"])
 @login_required
-@subdomain_req
+@subdomainReq
 def subdomainSettings():
     subdomain = Subdomain(current_user.subdomainID)
     works = subdomain.getWorksTable()
@@ -225,7 +225,7 @@ def subdomainSettings():
 
 @settings.route("/subdomain/addauth", methods=['POST'])
 @login_required
-@subdomain_req
+@subdomainReq
 def subdomainAddAuth():
     form = NewPassForm()
 
@@ -241,7 +241,7 @@ def subdomainAddAuth():
 
 @settings.route("/subdomain/add", methods=['POST'])
 @login_required
-@subdomain_req
+@subdomainReq
 def subdomainAddText():
     form = NewWorkForm()
     form.genres.choices = [(genre['id'], genre['genreString']) for genre in GENRES]
@@ -261,7 +261,7 @@ def subdomainAddText():
             file = request.files['fileUpload']
             if file.filename == '':
                 flash('No selected file', 'errorMessage')
-            elif file and allowed_file(file.filename):
+            elif file and allowedFile(file.filename):
                 filetext = file.read()
                 extension = file.filename.rsplit('.', 1)[1].lower()
                 text = convert_text(filetext, 'md', format=extension)
@@ -275,7 +275,7 @@ def subdomainAddText():
 
 @settings.route("/subdomain/modify", methods=["POST"])
 @login_required
-@subdomain_req
+@subdomainReq
 def subdomainModifyText():
     form = ModifyWorkForm()
 
@@ -298,7 +298,7 @@ def subdomainModifyText():
 
 @settings.route("/subdomain/delete", methods=["POST"])
 @login_required
-@subdomain_req
+@subdomainReq
 def subdomainDeleteText():
     if userInput("workID"):
         work = Work(userInput("workID"))

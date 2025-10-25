@@ -46,16 +46,16 @@ def noCache(response):
 
 ## Other
 ### see: subdomainTextupload()
-def allowed_file(filename):
-    allowed_extensions = {'docx', 'md'}
+def allowedFile(filename):
+    allowedExtensions = {'docx', 'md'}
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+           filename.rsplit('.', 1)[1].lower() in allowedExtensions
 
 def userInput(inputName):
     return request.form.get(inputName)
 
 # Wrappers
-def loggedin_notallowed(f):
+def loggedOutReq(f):
 	@functools.wraps(f)
 	def decorated_function(*args, **kwargs):
 		if current_user.is_authenticated:
@@ -64,7 +64,7 @@ def loggedin_notallowed(f):
 		return f(*args, **kwargs)
 	return decorated_function
 
-def subdomain_req(f):
+def subdomainReq(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.subdomainID is None:
