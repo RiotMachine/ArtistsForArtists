@@ -254,28 +254,28 @@ def subdomainTextMod():
     uploadForm = wtforms.UploadWorkForm()
     text = None
     oldTitle = None
+    genre = None
 
-    if "submit" in request.form:
-        if modForm.validate_on_submit():
-            ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
-            referer = urllib.urlparse(request.referrer)
-            if (refererQuery := urllib.parse_qs(referer.query)):
-                work = Work(refererQuery['workID'][0])
-                work.modifyWork(userInput("workText"), modForm.newTitle.data, modForm.genres.data)
-            else:
-                Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
-                            userInput("workText"), modForm.genres.data)
-            flash('Changes saved', 'successtext')
-            response = make_response(redirect(url_for('account.subdomainSettings')))
+    if "submit" in request.form and modForm.validate_on_submit():
+        ### https://stackoverflow.com/questions/5074803/retrieving-parameters-from-a-url
+        referer = urllib.urlparse(request.referrer)
+        if (refererQuery := urllib.parse_qs(referer.query)):
+            work = Work(refererQuery['workID'][0])
+            work.modifyWork(userInput("workText"), modForm.newTitle.data, modForm.genres.data)
+        else:
+            Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
+                        userInput("workText"), modForm.genres.data)
+        flash('Changes saved', 'successtext')
+        response = make_response(redirect(url_for('account.subdomainSettings')))
+
 
     else:
-        if "upload" in request.form:
-            if uploadForm.validate_on_submit():
-                file = uploadForm.upload.data
-                ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
-                filetext = file.read()
-                extension = file.filename.rsplit('.', 1)[1].lower()
-                text = pypandoc.convert_text(filetext, 'md', format=extension)
+        if "upload" in request.form and uploadForm.validate_on_submit():
+            file = uploadForm.upload.data
+            ### https://flask.palletsprojects.com/en/stable/patterns/fileuploads/
+            filetext = file.read()
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            text = pypandoc.convert_text(filetext, 'md', format=extension)
 
         if request.args.get("workID"):
             workID = dbQuery("SELECT id FROM works WHERE id = ?", [request.args.get("workID")], jen=True)
@@ -284,12 +284,13 @@ def subdomainTextMod():
             work = Work(workID['id'])
             workDeets = work.getWorkRow()
             oldTitle = workDeets['title']
+            genre = workDeets['genreID']
             if text is None:
                 text = workDeets['content']
 
         response = make_response(render_template("acctSubTxtMod.html", 
                                                 form=modForm, uploadForm=uploadForm,
-                                                oldTitle=oldTitle, text=text))
+                                                oldTitle=oldTitle, text=text, genre=genre))
     return noCache(response)
 
 @account.route("/subdomain/delete", methods=["POST"])

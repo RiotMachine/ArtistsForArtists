@@ -113,5 +113,5 @@ class Work():
         del self
 
     def getWorkRow(self):
-        return dbQuery("SELECT content, title FROM works WHERE works.id = ?",
+        return dbQuery("SELECT content, title, genreID FROM works WHERE works.id = ?",
                        [self.id], jen=True)
