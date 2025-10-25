@@ -9,10 +9,10 @@ AfA Settings
 {% endblock %}
 
 {% block sidebar %}
-<li>
-	<a href="{{ url_for('.settings') }}">Settings</a>
+<li class="nav-item">
+	<a href="{{ url_for('.settings') }}" class="nav-link">Settings</a>
 </li>
-<li>
-	<a href="{{ url_for('.subdomainSettings') }}">My Subdomain</a>
+<li class="nav-item">
+	<a href="{{ url_for('.subdomainSettings') }}" class="nav-link">My Subdomain</a>
 </li>
 {% endblock %}

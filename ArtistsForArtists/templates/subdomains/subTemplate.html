@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block sidebar %}
-<li>
-	<a href="{{ url_for('.works', subName=subName) }}">Work Index</a>
+<li class="nav-item">
+	<a href="{{ url_for('.works', subName=subName) }}" class="nav-link">Work Index</a>
 </li>
-<li>
-	<a href="{{ url_for('.aboutme', subName=subName) }}">About Me</a>
+<li class="nav-item">
+	<a href="{{ url_for('.aboutme', subName=subName) }}" class="nav-link">About Me</a>
 </li>
 {% endblock %}

@@ -26,12 +26,12 @@
                             Dark Mode
                         </button>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <h1>
                             {% block pageIndex %}{% endblock %}
                         </h1>
                     </div>
-                    <div class="col">
+                    <div class="col text-end">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Account
                         </button>
@@ -49,9 +49,9 @@
                 </div>
             </header>
             <div class="row">
-                <div class="col">
+                <div class="col-md-2">
                     <nav>
-                        <ul>
+                        <ul class="nav flex-column">
                             {% block sidebar %}{% endblock %}
                         </ul>
                         <a href="{{ url_for('homepage') }}" class="btn btn-primary btn-sm">
@@ -80,6 +80,7 @@
                         </div>
                     </main>
                 </div>
+                <div class="col-md-2"></div>
             </div>
             <footer>
             </footer>
