@@ -376,7 +376,7 @@ def aboutme(artistpage):
 @app.route('/r/<artistpage>/work')
 def workindex(artistpage):
     subdomain = Subdomain(getSubdomainID(artistpage))
-
+    d
     if not subdomain.verifyAuth():
         return redirect(url_for('authenticate', artistpage=subdomain.name))
 
