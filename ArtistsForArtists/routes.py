@@ -1,39 +1,18 @@
-# Implements a CMS (content management system)
-
-## Pypandoc is a Python wrapper for pandoc (file conversion software)
-### https://github.com/JessicaTegner/pypandoc
-### https://pandoc.org/
-## flask_login for session management
-### https://flask-login.readthedocs.io/en/latest
-from flask import (Flask, Blueprint, abort, flash, g, jsonify, make_response, 
-                   redirect, render_template, request, session, url_for)
-from classes import Subdomain, User, Work
-from helpers import (allowed_file, dbQuery, getPrevURL, getSubdomainID, noCache, 
-                     urlEscape, userInput, loggedin_notallowed, subdomain_req)
-from forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
-                   NewWorkForm, RegisterForm, SubdomainSettingsForm)
-from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+import urllib.parse as urllib
+from flask import (abort, flash, g, jsonify, make_response, redirect, 
+                    render_template, request, session, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
 from pypandoc import convert_text
-from urllib.parse import urlparse
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
+from ArtistsForArtists import app
+from ArtistsForArtists.config import login_manager
+from ArtistsForArtists.helpers import (allowed_file, dbQuery, getPrevURL, getSubdomainID, noCache, 
+                                        userInput, loggedin_notallowed, subdomain_req)
+from ArtistsForArtists.forms import (ChangePassForm, LoginForm, ModifyWorkForm, NewPassForm, 
+                                        NewWorkForm, RegisterForm, SubdomainSettingsForm)
+from ArtistsForArtists.classes import Subdomain, User, Work
 
-## SECRET_KEY is req for Flask cookies
-## .loopcontrols is for jinja2 control {% break %}
-## wsgi_app is Windows-provided code for default Python Flask app
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'RubberJamEatPolyTankAllenFolly'
-app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-app.jinja_env.filters["urlEscape"] = urlEscape
-wsgi_app = app.wsgi_app
-
-## setup for flask_login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
-login_manager.login_message = "Please log in to access that page."
-login_manager.login_message_category = "errorMessage"
 @login_manager.user_loader
 def load_user(user_id):
     userInfo = dbQuery("SELECT id, username, passwordhash "
@@ -42,19 +21,6 @@ def load_user(user_id):
         return None
     else:
         return User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
-
-## Globals
-### Used to initalize error messages
-### If error message has changed from this value, we know error has been enountered
-ERRORCHECKVALUE = "VOID"
-
-## see: dbOpenDict()
-@app.teardown_appcontext
-def close_connection(exception):
-    con = getattr(g, '_database', None)
-    if con is not None:
-        con.close()
-
 
 ## routing for JSON fetch('/darkmode')
 ### allows for Dark Mode button selection to carry over from page to page
@@ -70,6 +36,12 @@ def darkmode():
     else:
         abort(403)
 
+## see: dbOpenDict()
+@app.teardown_appcontext
+def close_connection(exception):
+    con = getattr(g, '_database', None)
+    if con is not None:
+        con.close()
 
 # Error Pages
 @app.errorhandler(403)
@@ -137,9 +109,9 @@ def login():
             user = User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
             login_user(user, remember=form.rememberMe.data)
             current_user.setupPrefs()
-            if session.get("url") is not None and ((urlparse(session['url'])[2] != url_for('login')) and 
-                                                   (urlparse(session['url'])[2] != url_for('register')) and
-                                                   (urlparse(session['url'])[2] != url_for('homepage'))):
+            if session.get("url") is not None and ((urllib.urlparse(session['url'])[2] != url_for('login')) and 
+                                                   (urllib.urlparse(session['url'])[2] != url_for('register')) and
+                                                   (urllib.urlparse(session['url'])[2] != url_for('homepage'))):
                 response = make_response(redirect(session["url"]))
             else:
                 flash('Login successful!', 'successtext')

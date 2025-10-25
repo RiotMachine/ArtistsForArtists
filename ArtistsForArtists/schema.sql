@@ -1,6 +1,4 @@
-# dB setup
-
-## storage tables
+-- storage tables
 CREATE TABLE IF NOT EXISTS users (
 id INTEGER PRIMARY KEY NOT NULL,
 username TEXT NOT NULL UNIQUE,
@@ -33,7 +31,7 @@ FOREIGN KEY (subdomainID) REFERENCES subdomains (id),
 FOREIGN KEY (genreID) REFERENCES genres (id)
 );
 
-## attribute tables 
+-- attribute tables 
 CREATE TABLE IF NOT EXISTS genres (
 id INTEGER PRIMARY KEY NOT NULL,
 genreString TEXT NOT NULL
@@ -51,7 +49,7 @@ prefDetails TEXT
 INSERT OR IGNORE INTO prefs (prefString, prefDetails) 
     VALUES ('darkmode', 'sets the initial Boolean value of a user''s darkmode session variable upon login');
 
-## junction tables
+-- junction tables
 CREATE TABLE IF NOT EXISTS userPrefs (
 id INTEGER PRIMARY KEY NOT NULL,
 userID INTEGER NOT NULL,

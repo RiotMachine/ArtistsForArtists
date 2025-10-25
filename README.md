@@ -166,3 +166,8 @@ Static contains global CSS, AfA-specific CSS, global JS, and Artist page-specifi
     - User-to-Artist interaction
 
     - Artist page statistics
+
+    ### Dependencies
+
+    #### External Dependencies
+    - sqlite3

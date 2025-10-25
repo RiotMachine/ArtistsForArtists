@@ -1,8 +1,9 @@
+import functools
+import urllib.parse as urllib
+import sqlite3
 from flask import abort, flash, g, redirect, request, url_for
 from flask_login import current_user
-from functools import wraps
-from urllib.parse import urlparse
-import sqlite3
+from ArtistsForArtists.config import DB_LOCATION
 
 # Functions
 
@@ -12,7 +13,7 @@ import sqlite3
 def dbOpenDict():
     con = getattr(g, '_database', None)
     if con is None:
-        con = g._database = sqlite3.connect("artforart.db", autocommit=True)
+        con = g._database = sqlite3.connect(DB_LOCATION, autocommit=True)
         con.row_factory = sqlite3.Row
     return con
 
@@ -25,8 +26,8 @@ def dbQuery(query, args=(), jen=False):
 ## Nav functions
 def getPrevURL():
     referURL = request.referrer
-    referHostname = urlparse(referURL).hostname
-    destHostname = urlparse(request.url).hostname
+    referHostname = urllib.urlparse(referURL).hostname
+    destHostname = urllib.urlparse(request.url).hostname
     if referHostname == destHostname:
         return referURL
     else:
@@ -55,7 +56,7 @@ def userInput(inputName):
 
 # Wrappers
 def loggedin_notallowed(f):
-	@wraps(f)
+	@functools.wraps(f)
 	def decorated_function(*args, **kwargs):
 		if current_user.is_authenticated:
 			flash('You are already logged in', 'errorMessage')
@@ -64,15 +65,10 @@ def loggedin_notallowed(f):
 	return decorated_function
 
 def subdomain_req(f):
-    @wraps(f)
+    @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.subdomainID is None:
             flash('Please register an Artist Site to access that page', 'errorMessage')
             return redirect(url_for('account'))
         return f(*args, **kwargs)
     return decorated_function
-
-# Filters
-## Filter for titles with chars needing escaped when referenced in links
-def urlEscape(string):
-    return string.replace("?", "%3F")

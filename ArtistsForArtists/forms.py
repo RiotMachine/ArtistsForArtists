@@ -1,6 +1,6 @@
-from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, RadioField, StringField
 from wtforms.validators import EqualTo, InputRequired
+from flask_wtf import FlaskForm
 
 ## credit to @dcrosta
 ## https://stackoverflow.com/questions/8463209/how-to-make-a-field-conditionally-optional-in-wtforms

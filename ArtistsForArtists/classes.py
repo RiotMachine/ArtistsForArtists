@@ -1,8 +1,7 @@
 from flask import session
 from flask_login import UserMixin
-from helpers import dbQuery, userInput
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from ArtistsForArtists.helpers import dbQuery, userInput
 
 class User(UserMixin):
     def __init__(self, id, username, passhash):
