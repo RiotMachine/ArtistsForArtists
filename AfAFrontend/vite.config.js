@@ -1,10 +1,14 @@
 import { defineConfig } from 'vite'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { compression } from 'vite-plugin-compression2'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+    plugins: [
+        compression()
+    ],
     build: {
         rollupOptions: {
             input: resolve(__dirname, '/src/js/main.js'),
