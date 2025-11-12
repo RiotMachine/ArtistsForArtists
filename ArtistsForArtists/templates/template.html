@@ -80,10 +80,11 @@
                 </div>
             </div>
         </div>
-        <footer class="mt-auto">
+        <footer class="mt-auto mb-2">
             <div class="container">
                 <div class="row text-center">
                     <div class="col">
+                        {% block footer %}{% endblock %}
                         <a href="{{ url_for('homepage') }}" class="btn btn-primary btn-sm">
                             Artists for Artists 
                         </a>
