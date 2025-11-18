@@ -4,8 +4,8 @@
 <form action="{{ url_for('login') }}" method="post">
 	{{ form.csrf_token }}
 
-	{{ form.username(placeholder="Username") }}
-	{{ form.password(placeholder="Password") }}
+	{{ form.username(placeholder="Username", class="form-control") }}
+	{{ form.password(placeholder="Password", class="form-control") }}
 
 	{{ form.rememberMe.label }}
 	{{ form.rememberMe }}

@@ -7,14 +7,19 @@
 {% block content %}
 <form action="{{ request.path }}" method="POST">
 	{{ form.csrf_token }}
-	<label for="subdomainpassword">Enter {{ subName }}'s password to access their works.</label>
-	{{ form.password(placeholder="Password", id="subdomainPassword") }}
+
+	<label for="subdomainPassword" class="form-label">
+		Enter {{ subName }}'s password to access their works.
+	</label>
+	{{ form.password(placeholder="Password", id="subdomainPassword", class="form-control") }}
+
 	{% for error in form.password.errors %}
-	<p class="errorMessage">{{ error }}</p>
+		<p class="errorMessage">{{ error }}</p>
 	{% endfor %}
-	{% if errortext is not none %}
-	<p class="errorMessage">{{ errortext }}</p>
+	{% if errorText is not none %}
+		<p class="errorMessage">{{ errorText }}</p>
 	{% endif %}
+
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}

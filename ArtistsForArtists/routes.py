@@ -353,7 +353,7 @@ def authenticate(subName):
         return redirect(url_for('subdomain.works', subName=subdomain.name))
 
     return render_template("subAuth.html", form=form,
-                           subName=subdomain.name, errortext=errorText)
+                           subName=subdomain.name, errorText=errorText)
 
 ## files are stored in DB as markdown then converted to HTML when pulled
 @subdomain.route('/work/<worktitle>')
