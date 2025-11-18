@@ -6,14 +6,14 @@
 		<form action="{{ url_for('register') }}" method="post">
 			{{ form.csrf_token }}
 
-			{{ form.username(placeholder="Username", class="form-control mb-1") }}
-			{{ form.password(placeholder="Password", class="form-control mb-1") }}
-			{{ form.confirm(placeholder="Re-enter password", class="form-control mb-1") }}
+			{{ form.username(placeholder="Username", class="form-control mb-2") }}
+			{{ form.password(placeholder="Password", class="form-control mb-2") }}
+			{{ form.confirm(placeholder="Re-enter password", class="form-control mb-2") }}
 
 			<!--Using this solution because Bootstrap docs use cols to break up form segments,-->
 			<!--and because wrapping form-check in d-flex and using justify-content-center-->
 			<!--messes with Bootstrap's native form-check spacing-->
-			<div class="col-12">
+			<div class="col-12 mb-1">
 				<div class="form-check form-check-inline">
 					{{ form.rememberMe(class="form-check-input") }}
 					{{ form.rememberMe.label(class="form-check-label") }}

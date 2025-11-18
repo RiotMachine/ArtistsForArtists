@@ -1,21 +1,29 @@
 {% extends "siteTemplate.html" %}
 
 {% block content %}
-<form action="{{ url_for('login') }}" method="post">
-	{{ form.csrf_token }}
+<div class="row justify-content-center">
+	<div class="col-auto text-center">
+		<form action="{{ url_for('login') }}" method="post">
+			{{ form.csrf_token }}
 
-	{{ form.username(placeholder="Username", class="form-control") }}
-	{{ form.password(placeholder="Password", class="form-control") }}
+			{{ form.username(placeholder="Username", class="form-control mb-2") }}
+			{{ form.password(placeholder="Password", class="form-control mb-2") }}
 
-	{{ form.rememberMe.label }}
-	{{ form.rememberMe }}
+			<div class="col-12 mb-1">
+				<div class="form-check form-check-inline">
+					{{ form.rememberMe(class="form-check-input") }}
+					{{ form.rememberMe.label(class="form-check-label") }}
+				</div>
+			</div>
 
-	{% for field in [form.username, form.password] %}
-		{% for error in field.errors %}
-			<p>{{ error }}</p>
-		{% endfor %}
-	{% endfor %}
+			{% for field in [form.username, form.password] %}
+				{% for error in field.errors %}
+					<p>{{ error }}</p>
+				{% endfor %}
+			{% endfor %}
 
-	<button class="btn btn-primary w-auto" type="submit">Log In</button>
-</form>
+			<button class="btn btn-primary" type="submit">Log In</button>
+		</form>
+	</div>
+</div>
 {% endblock %}
