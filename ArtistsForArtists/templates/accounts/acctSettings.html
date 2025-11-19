@@ -5,22 +5,31 @@
 {% endblock %}
 
 {% block content %}
-<form action="{{ url_for('.settings') }}" method="post">
-	{{ form.csrf_token }}
-	<fieldset>
-		{% include "modules/ChangePass.html" %}
-	</fieldset>
-	<fieldset>
-		<legend>User preferences</legend>
-		{% for pref in prefs %}
-			{% if userprefs[pref] %}
-			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
-			{% else %}
-			<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">
-			{% endif %}
-			<label class="form-check-label" for="{{pref}}Check">Make {{ pref }} my default</label>
-		{% endfor %}
-	</fieldset>
-	<button class="btn btn-primary w-auto" type="submit">Submit</button>
-</form>
+<div class="row">
+	<div class="col-4">
+		<form action="{{ url_for('.settings') }}" method="post">
+			{{ form.csrf_token }}
+
+			<fieldset class="mb-2">
+				{% include "modules/ChangePass.html" %}
+			</fieldset>
+
+			<fieldset class="mb-3">
+				<legend>Preferences</legend>
+				<div class="form-check form-switch">
+					{% for pref in prefs %}
+						{% if userprefs[pref] %}
+						<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" checked name="{{pref}}">
+						{% else %}
+						<input class="form-check-input" type="checkbox" role="switch" id="{{pref}}Check" name="{{pref}}">
+						{% endif %}
+						<label class="form-check-label" for="{{pref}}Check">Make {{ pref }} my default</label>
+					{% endfor %}
+				</div>
+			</fieldset>
+
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
 {% endblock %}

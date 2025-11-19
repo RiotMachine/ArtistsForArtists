@@ -1,15 +1,15 @@
 <legend>Change password</legend>
-{{ form.oldpass(placeholder="Old password", required=False) }}
+{{ form.oldpass(placeholder="Old password", class="form-control mb-2", required=False) }}
 {% for error in form.oldpass.errors %}
     <p>{{ error }}</p>
 {% endfor %}
 
-{{ form.newpass(placeholder="New password", required=False) }}
+{{ form.newpass(placeholder="New password", class="form-control mb-2", required=False) }}
 {% for error in form.newpass.errors %}
     <p>{{ error }}</p>
 {% endfor %}
 
-{{ form.confirm(placeholder="Re-enter password", required=False) }}
+{{ form.confirm(placeholder="Re-enter password", class="form-control mb-2", required=False) }}
 {% for error in form.confirm.errors %}
     <p>{{ error }}</p>
 {% endfor %}
