@@ -29,9 +29,6 @@
 				{{ form.setAuth(class="form-check-input", id="authPref", type="checkbox", required=False, role="switch") }}
 				{% endif %}
 				{{ form.setAuth.label(class="form-check-label", for="authPref") }}
-				{% for error in form.setAuth.errors %}
-				<p class="errorMessage">{{ error }}</p>
-				{% endfor %}
 				</div>
 			</fieldset>
 
