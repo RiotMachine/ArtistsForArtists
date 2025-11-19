@@ -11,9 +11,16 @@
 
 {% block content %}
 <form action="{{ url_for('search') }}" method="get">
-    <input autocomplete="off" autofocus name="q" type="search">
-    <button type="submit">Search</button>
+    <div class="row align-items-center mb-2 justify-content-center justify-content-md-start">
+        <div class="col-auto">
+            <input autocomplete="off" autofocus class="form-control" name="q" type="search">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-secondary btn-sm" type="submit">Search</button>
+        </div>
+    </div>
 </form>
+
 <ul id="jsSearch">
     {% for subName in subNames %}
     <li><a href="{{ url_for('subdomain.index', subName=subName) }}">{{ subName }}</a></li>
