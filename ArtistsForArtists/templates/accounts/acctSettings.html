@@ -10,7 +10,7 @@
 		<form action="{{ url_for('.settings') }}" method="post">
 			{{ form.csrf_token }}
 
-			<fieldset class="mb-2">
+			<fieldset>
 				{% include "modules/ChangePass.html" %}
 			</fieldset>
 

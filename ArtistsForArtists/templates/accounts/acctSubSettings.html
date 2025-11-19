@@ -9,31 +9,36 @@
 {% endblock %}
 
 {% block content %}
-<form action="{{ url_for('.subdomainSettings') }}" method="post">
-	{{ form.csrf_token }}
-	{% if authreqBool %}
-	<fieldset>
-		{% include "modules/ChangePass.html" %}
-	</fieldset>
-	{% endif %}
+<div class="row">
+	<div class="col-4">
+		<form action="{{ url_for('.subdomainSettings') }}" method="post">
+			{{ form.csrf_token }}
 
-	<fieldset>
-		<legend>Authentication settings</legend>
-		
-		{{ form.setAuth.label }}
-		{% if authreqBool %}
-		{{ form.setAuth(checked=True, required=False) }}
-		{% else %}
-		{{ form.setAuth(required=False) }}
-		{% endif %}
+			{% if authreqBool %}
+			<fieldset>
+				{% include "modules/ChangePass.html" %}
+			</fieldset>
+			{% endif %}
 
-		{% for error in form.setAuth.errors %}
-		<p class="errorMessage">{{ error }}</p>
-		{% endfor %}
-	</fieldset>
+			<fieldset class="mb-3">
+				<legend>Authentication settings</legend>
+				<div class="form-check form-switch">
+				{% if authreqBool %}
+				{{ form.setAuth(checked=True, class="form-check-input", id="authPref", type="checkbox", required=False, role="switch") }}
+				{% else %}
+				{{ form.setAuth(class="form-check-input", id="authPref", type="checkbox", required=False, role="switch") }}
+				{% endif %}
+				{{ form.setAuth.label(class="form-check-label", for="authPref") }}
+				{% for error in form.setAuth.errors %}
+				<p class="errorMessage">{{ error }}</p>
+				{% endfor %}
+				</div>
+			</fieldset>
 
-	<button class="btn btn-primary w-auto" type="submit">Submit</button>
-</form>
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
 
 <hr>
 

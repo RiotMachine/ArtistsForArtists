@@ -9,7 +9,7 @@
     <p>{{ error }}</p>
 {% endfor %}
 
-{{ form.confirm(placeholder="Re-enter password", class="form-control mb-2", required=False) }}
+{{ form.confirm(placeholder="Re-enter password", class="form-control mb-3", required=False) }}
 {% for error in form.confirm.errors %}
     <p>{{ error }}</p>
 {% endfor %}
