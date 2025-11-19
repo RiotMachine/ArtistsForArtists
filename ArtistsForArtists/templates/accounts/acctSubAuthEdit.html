@@ -1,21 +1,30 @@
 {% extends "acctTemplate.html" %}
 
+{% block legend %}
+<h4>Add authentication</h4>
+{% endblock %}
+
 {% block content %}
-<h5>Add authentication</h5>
+<div class="row justify-content-center text-center mb-2">
+	<div class="col-auto">
+		<form action="{{ url_for('.subdomainAuthEdit') }}" method="post">
+			{{ form.csrf_token }}
 
-<form action="{{ url_for('.subdomainAuthEdit') }}" method="post">
-	{{ form.csrf_token }}
+			{{ form.newpass(placeholder="Password", class="form-control mb-2") }}
+			{{ form.confirm(placeholder="Re-enter password", class="form-control mb-3") }}
 
-	{{ form.newpass(placeholder="Password") }}
-	{% for error in form.newpass.errors %}
-		<p>{{ error }}</p>
-	{% endfor %}
-	
-	{{ form.confirm(placeholder="Re-enter password") }}
-	{% for error in form.confirm.errors %}
-		<p>{{ error }}</p>
-	{% endfor %}
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
 
-	<button class="btn btn-primary w-auto" type="submit">Submit</button>
-</form>
+<div class="row text-center">
+	<div class="col">
+		{% for field in [form.newpass, form.confirm] %}
+			{% for error in field.errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+		{% endfor %}
+	</div>
+</div>
 {% endblock %}
