@@ -16,6 +16,7 @@
 	</div>
 	<div class="col-12 col-md-6 text-center">
 		{% if hasphoto %}
+		<!--Using inline CSS for just this item since it's the only custom CSS I need atm-->
 		<img src="{{ url_for('static', filename=subName+'.jpeg') }}" alt="Artist photo" style="max-height: 500px" class="img-fluid">
 		{% endif %}
 	</div>
