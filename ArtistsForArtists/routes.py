@@ -46,7 +46,7 @@ def close_connection(exception):
 
 # Error Pages
 @app.errorhandler(403)
-def handle_admin_url(e):
+def handle_invalid_access(e):
     flash('Nope, you''re not allowed to go there.')
     return redirect(url_for('homepage'))
 
@@ -56,7 +56,7 @@ def handle_invalid_url(e):
     return redirect(url_for('homepage'))
 
 @app.errorhandler(405)
-def handle_invalid_url(e):
+def handle_invalid_method(e):
     flash('You cant get there that way.')
     return redirect(url_for('homepage'))
 
