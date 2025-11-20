@@ -48,22 +48,22 @@ def close_connection(exception):
 @app.errorhandler(403)
 def handle_invalid_access(e):
     flash('Nope, you''re not allowed to go there.')
-    return redirect(url_for('homepage'))
+    return render_template("index.html"), 403
 
 @app.errorhandler(404)
 def handle_invalid_url(e):
     flash('That url does not exist.')
-    return redirect(url_for('homepage'))
+    return render_template("index.html"), 404
 
 @app.errorhandler(405)
 def handle_invalid_method(e):
     flash('You cant get there that way.')
-    return redirect(url_for('homepage'))
+    return render_template("index.html"), 405
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_misc_bad_request(e):
     flash('Something went wrong.')
-    return redirect(url_for('homepage'), code=400)
+    return render_template("index.html"), 400
 
 
 # AfA Pages
