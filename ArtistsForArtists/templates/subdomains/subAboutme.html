@@ -10,9 +10,9 @@
 	<div class="col">
 		{{ htmlAboutme | safe }}
 	</div>
-	<div class="col">
+	<div class="col text-center">
 		{% if hasphoto %}
-		<img src="{{ url_for('static', filename=subName+'.jpeg') }}" alt="Artist photo" class="img-fluid">
+		<img src="{{ url_for('static', filename=subName+'.jpeg') }}" alt="Artist photo" style="max-height: 500px" class="img-fluid">
 		{% endif %}
 	</div>
 </div>
