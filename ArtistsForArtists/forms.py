@@ -68,16 +68,16 @@ class NewPassForm(FlaskForm):
 
 
 class ModWorkForm(FlaskForm):
-    newTitle = StringField(validators=[
+    newTitle = StringField('Title', validators=[
         InputRequired(message='Your work must have a title')
         ])
-    genres = RadioField(validators=[
+    genres = RadioField('Genre', validators=[
         InputRequired(message='You must choose a genre')
         ])    
 
 
 class UploadWorkForm(FlaskForm):
-    upload = FileField('upload', validators=[
+    upload = FileField('Upload a text', validators=[
         FileRequired(),
         FileAllowed(['docx', 'md', 'odt'], 'Word, Markdown, and OpenOffice files allowed.')
     ])

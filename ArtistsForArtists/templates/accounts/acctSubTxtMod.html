@@ -5,56 +5,90 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+	<div class="col">
+		<h5>Upload a text</h5>
+	</div>
+</div>
 
-<h5>Upload a text</h5>
 <form method="POST" enctype="multipart/form-data">
 	{{ uploadForm.csrf_token }}
-	{{ uploadForm.upload }}
-	<button class="btn btn-secondary btn-sm" type="submit" name="upload">
-		Render
-	</button>
-	{% for error in uploadForm.upload.errors %}
-		<p>{{ error }}</p>
-	{% endfor %}
+
+	<div class="row">
+		<div class="col-8 col-md-6 col-lg-4">
+			{{ uploadForm.upload(class="form-control", id="formFile") }}
+		</div>
+		<div class="col align-self-center">
+			<button class="btn btn-secondary btn-sm" type="submit" name="upload">
+				Render
+			</button>
+		</div>
+	</div>
+
+	<div class="row mb-4">
+		<div class="col">
+			{% for error in uploadForm.upload.errors %}
+				<p>{{ error }}</p>
+			{% endfor %}	
+		</div>
+	</div>
 </form>
 
 <form action="{{ url_for('.subdomainTextMod') }}" method="POST">
 	{{ form.csrf_token }}
 	<fieldset>
-		<legend>Title</legend>
-		{% if oldTitle is none %}
-		{{ form.newTitle }}
-		{% else %}
-		{{ form.newTitle(value=oldTitle) }}
-		{% endif %}
-		{% for error in form.newTitle.errors %}
-			<p>{{ error }}</p>
-		{% endfor %}
+		<div class="row mb-2">
+			<div class="col-6">
+				<legend>Title</legend>
+
+				{% if oldTitle is none %}
+					{{ form.newTitle(class="form-control") }}
+				{% else %}
+					{{ form.newTitle(class="form-control", value=oldTitle) }}
+				{% endif %}
+
+			{% for error in form.newTitle.errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+			</div>
+		</div>
 	</fieldset>
 
 	<fieldset>
-		<legend>Genre</legend>
-		{% for subfield in form.genres %}
-			{{ subfield.label }}
-			{{ subfield }}
-		{% endfor %}
-		{% for error in form.genres.errors %}
-			<p>{{ error }}</p>
-		{% endfor %}
+		<div class="row mb-3">
+			<div class="col">
+				<legend>Genre</legend>
+		
+			{% for subfield in form.genres %}
+				<div class="form-check form-check-inline">
+					{{ subfield.label(class="form-check-label") }}
+					{{ subfield (class="form-check-input")}}
+				</div>
+			{% endfor %}
+
+			{% for error in form.genres.errors %}
+				<p>{{ error }}</p>
+			{% endfor %}
+			</div>
+		</div>
 	</fieldset>
 
-	<fieldset>
-		<legend>Text</legend>
-		{% if text is none %}
-		<textarea name="workText" id="EasyMDEText"></textarea>
-		{% else %}
-		<textarea name="workText" id="EasyMDEText">{{ text }}</textarea>
-		{% endif %}
-	</fieldset>
+	<div class="row">
+		<div class="col">
+			<fieldset>
+				<legend>Text</legend>
+				{% if text is none %}
+				<textarea name="workText" id="EasyMDEText"></textarea>
+				{% else %}
+				<textarea name="workText" id="EasyMDEText">{{ text }}</textarea>
+				{% endif %}
+			</fieldset>
 
-	<button class="btn btn-primary w-auto" type="submit" name="submit">
-		Submit
-	</button>
+			<button class="btn btn-primary" type="submit" name="submit">
+				Submit
+			</button>
+		</div>
+	</div>
 </form>
 
 {% endblock %}
