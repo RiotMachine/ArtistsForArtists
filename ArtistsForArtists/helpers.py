@@ -52,7 +52,7 @@ def loggedOutReq(f):
 	@functools.wraps(f)
 	def decorated_function(*args, **kwargs):
 		if current_user.is_authenticated:
-			flash('You are already logged in', 'errorMessage')
+			flash('You are already logged in')
 			return redirect(url_for('homepage'))
 		return f(*args, **kwargs)
 	return decorated_function
@@ -61,7 +61,7 @@ def subdomainReq(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.subdomainID is None:
-            flash('Please register an Artist Site to access that page', 'errorMessage')
+            flash('Please register an Artist Site to access that page')
             return redirect(url_for('account.settings'))
         return f(*args, **kwargs)
     return decorated_function

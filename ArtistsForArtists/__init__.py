@@ -19,7 +19,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message = "Please log in to access that page."
-login_manager.login_message_category = "errorMessage"
 
 ### set SQLite3 dB location
 DB_LOCATION = "file:/home/jacob/Projects/ArtistsForArtists/artforart.db"

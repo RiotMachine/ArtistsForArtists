@@ -25,10 +25,10 @@
 <div class="row text-center">
 	<div class="col">
 		{% for error in form.password.errors %}
-			<p class="errorMessage">{{ error }}</p>
+			<p>{{ error }}</p>
 		{% endfor %}
 		{% if errorText is not none %}
-			<p class="errorMessage">{{ errorText }}</p>
+			<p>{{ errorText }}</p>
 		{% endif %}
 	</div>
 </div>

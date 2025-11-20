@@ -47,7 +47,7 @@ def close_connection(exception):
 # Error Pages
 @app.errorhandler(403)
 def handle_admin_url(e):
-    flash('Nope, you''re not allowed to go there.', 'errorMessage')
+    flash('Nope, you''re not allowed to go there.')
     return redirect(url_for('homepage'))
 
 @app.errorhandler(404)
@@ -57,7 +57,7 @@ def handle_invalid_url(e):
 
 @app.errorhandler(405)
 def handle_invalid_url(e):
-    flash('You cant get there that way.', 'errorMessage')
+    flash('You cant get there that way.')
     return redirect(url_for('homepage'))
 
 @app.errorhandler(werkzeug.exceptions.BadRequest)
@@ -103,7 +103,7 @@ def register():
         nameCheck = dbQuery("SELECT username FROM users WHERE username = ?",
                                [username], jen=True)
         if nameCheck is not None:
-            flash("That username is unavailable", 'errorMessage')
+            flash("That username is unavailable")
             response = make_response(render_template("register.html", form=form))
         else:
             userInfo = dbQuery("INSERT INTO users (username, passwordhash) VALUES (?, ?) "
@@ -111,7 +111,7 @@ def register():
                                [username, generate_password_hash(password)], jen=True)
             user = User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
             login_user(user, remember=form.rememberMe.data)
-            flash('Registration successful!', 'successtext')
+            flash('Registration successful!')
             response = make_response(redirect(url_for('homepage')))
     else:
         response = make_response(render_template("register.html", form=form))
@@ -130,7 +130,7 @@ def login():
         userInfo = dbQuery("SELECT id, username, passwordhash FROM users WHERE username = ?", 
                             [username], jen=True)
         if userInfo is None or not check_pass(userInfo['passwordhash'], password):
-            flash("Your username or password is incorrect", 'errorMessage')
+            flash("Your username or password is incorrect")
             response = make_response(render_template("login.html", form=form))
         else:
             user = User(userInfo['id'], userInfo['username'], userInfo['passwordhash'])
@@ -141,7 +141,7 @@ def login():
                                                    (urllib.urlparse(session['url'])[2] != url_for('homepage'))):
                 response = make_response(redirect(session["url"]))
             else:
-                flash('Login successful!', 'successtext')
+                flash('Login successful!')
                 response = make_response(redirect(url_for('homepage')))
     else:
         session["url"] = getPrevURL()
@@ -153,7 +153,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out', 'errorMessage')
+    flash('You have been logged out')
     return redirect(url_for('homepage'))
 
 
@@ -182,7 +182,7 @@ def settings():
                 flash('Password not saved. Enter the correct current password')
             else:
                 current_user.changePass(form.newpass.data)
-                flash('Password changed', 'successtext')
+                flash('Password changed')
 
         newprefsDict = {}
         for pref in prefs:
@@ -212,7 +212,7 @@ def subdomainSettings():
                 flash('Password not saved. Enter the correct current password')
             else:
                 subdomain.changePass(form.newpass.data)
-                flash('Subdomain password changed', 'successtext')
+                flash('Subdomain password changed')
 
         elif form.setAuth.data and not subdomain.authReq:
             response = make_response(redirect(url_for('account.subdomainAuthEdit')))
@@ -220,7 +220,7 @@ def subdomainSettings():
 
         elif not form.setAuth.data and subdomain.authReq:
             dbQuery("UPDATE subdomains SET authreq = 0 where id = ?", [subdomain.id])
-            flash('Authentication turned off', 'successtext')
+            flash('Authentication turned off')
 
         subdomain = Subdomain(current_user.subdomainID)
 
@@ -238,7 +238,7 @@ def subdomainAuthEdit():
     if form.validate_on_submit():
         dbQuery("UPDATE subdomains SET authpasshash = ?, authreq = 1 WHERE id = ?", 
                 [generate_password_hash(form.newpass.data), current_user.subdomainID])
-        flash('Authentication added', 'successtext')
+        flash('Authentication added')
         response = make_response(redirect(url_for('account.subdomainSettings')))
     else:
         response = make_response(render_template("acctSubAuthEdit.html", form=form))
@@ -264,7 +264,7 @@ def subdomainTextMod():
         else:
             Work.newWork(modForm.newTitle.data, current_user.subdomainID, 
                         userInput("workText"), modForm.genres.data)
-        flash('Changes saved', 'successtext')
+        flash('Changes saved')
         response = make_response(redirect(url_for('account.subdomainSettings')))
 
 
@@ -301,7 +301,7 @@ def subdomainTextMod():
 def subdomainTextDelete():
     work = Work(userInput("workID"))
     work.deleteWork()
-    flash('Work deleted', 'errorMessage')
+    flash('Work deleted')
     response = make_response(redirect(url_for('account.subdomainSettings')))
     return noCache(response)
 
