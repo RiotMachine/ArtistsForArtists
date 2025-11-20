@@ -6,23 +6,27 @@
 
 {% block content %}
 <!--Table of static user data-->
-<table class="table">
-	<thead>
-		<tr>
-			<th class="text-center" colspan="4">Details</th>
-		</tr>
-	</thead>
-	<tbody class="table-group-divider">
-		<tr>
-			<th class="col-2" scope="row">Username:</th>
-			<td class="col-2">{{ current_user.username }}</td>
-		</tr>
-		{% if subdomain is not none %}
-		<tr>
-			<th class="col-2" scope="row">Subdomain:</th>
-			<td class="col-2">{{ subdomain.name }}</td>
-		</tr>
-		{% endif %}
-	</tbody>
-</table>
+<div class="row justify-content-center">
+	<div class="col-10 col-md-6">
+		<table class="table">
+			<thead>
+				<tr>
+					<th class="text-center" colspan="2" scope="rowgroup">Details</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Username:</th>
+					<td>{{ current_user.username }}</td>
+				</tr>
+				{% if subdomain is not none %}
+				<tr>
+					<th scope="row">Subdomain:</th>
+					<td>{{ subdomain.name }}</td>
+				</tr>
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>
 {% endblock %}
