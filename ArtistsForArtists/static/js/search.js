@@ -1,4 +1,4 @@
-// vulnerable if 'subdomain' str has not been sanitized
+// vulnerable if 'subdomains' list members have not been sanitized
 
 let input = document.querySelector('input');
 input.addEventListener('input', async function () {
