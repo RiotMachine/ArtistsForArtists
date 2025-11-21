@@ -83,6 +83,7 @@ def search():
     else:
         subNames = dbQuery("SELECT pagename FROM subdomains")
     for subName in subNames:
+        ## AJAX injects html, so escaping subdomain names just in case
         safeSubName = markupsafe.escape(subName['pagename'])
         subNamesList.append(safeSubName)
 

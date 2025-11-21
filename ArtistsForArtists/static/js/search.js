@@ -1,3 +1,5 @@
+// vulnerable if 'subdomain' str has not been sanitized
+
 let input = document.querySelector('input');
 input.addEventListener('input', async function () {
     let response = await fetch('/search?q=' + input.value, {
