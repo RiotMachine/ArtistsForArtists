@@ -83,7 +83,8 @@ def search():
     else:
         subNames = dbQuery("SELECT pagename FROM subdomains")
     for subName in subNames:
-        subNamesList.append(subName['pagename'])
+        safeSubName = markupsafe.escape(subName['pagename'])
+        subNamesList.append(safeSubName)
 
     if request.method == "GET":
         return render_template("search.html", subNames=subNamesList)
