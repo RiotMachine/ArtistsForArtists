@@ -318,7 +318,8 @@ def aboutme(subName):
     subdomain = Subdomain(getSubdomainID(subName))
 
     aboutmeRow = subdomain.getAboutmeRow()
-    htmlAboutme = pypandoc.convert_text(aboutmeRow['aboutme'], 'html', format='md')
+    safeAboutme = markupsafe.escape(aboutmeRow['aboutme'])
+    htmlAboutme = pypandoc.convert_text(safeAboutme, 'html', format='md')
     hasphoto = bool(aboutmeRow['hasphoto'])
 
     return render_template("subAboutme.html", 
