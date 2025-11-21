@@ -2,6 +2,7 @@ import urllib.parse as urllib
 from flask                      import (Blueprint, abort, flash, g, jsonify, make_response, redirect, 
                                         render_template, request, session, url_for)
 from flask_login                import current_user, login_required, login_user, logout_user
+import markupsafe
 import pypandoc
 import werkzeug.exceptions
 from werkzeug.security          import check_password_hash as check_pass, generate_password_hash
@@ -366,7 +367,8 @@ def text(subName, worktitle):
     text = subdomain.getWork(worktitle)
     if text is None:
         abort(404)
-    htmlText = pypandoc.convert_text(text['content'], 'html', format='md')
+    safeText = markupsafe.escape(text['content'])
+    htmlText = pypandoc.convert_text(safeText, 'html', format='md')
    
     return render_template("subText.html", 
                            subName=subdomain.name, worktitle=worktitle, 
