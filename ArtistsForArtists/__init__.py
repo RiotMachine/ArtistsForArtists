@@ -1,13 +1,17 @@
 from flask          import Flask
 from flask_login    import LoginManager
 from flask_talisman import Talisman
+from dotenv         import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
 
 ## SECRET_KEY is req for Flask cookies
-app.config['SECRET_KEY'] = "ChangingThisOnceWeGoLive"
-app.config['RECAPTCHA_PUBLIC_KEY'] = "6LdEkhQsAAAAAL_V00C2mhfA09QO5ggPAFu681n1"
-app.config['RECAPTCHA_PRIVATE_KEY'] = "6LdEkhQsAAAAAOzLqzPEbj7B7zeWFqGWyjdz4N1j"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['RECAPTCHA_PUBLIC_KEY'] = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+DB_LOCATION = os.environ.get('DB_LOCATION')
 
 ## .loopcontrols is for jinja2 control {% break %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -27,9 +31,6 @@ login_manager.login_message = "Please log in to access that page."
 ### worth setting a csp at some point, but not worth
 ### keeping first iteration of the project offline
 Talisman(app, content_security_policy=None)
-
-### set SQLite3 dB location
-DB_LOCATION = "file:/home/jacob/Projects/ArtistsForArtists/artforart.db"
 
 import ArtistsForArtists.routes as routes
 app.register_blueprint(routes.subdomain)
