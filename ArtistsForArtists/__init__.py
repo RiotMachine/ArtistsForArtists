@@ -1,5 +1,6 @@
 from flask          import Flask
 from flask_login    import LoginManager
+from flask_talisman import Talisman, GOOGLE_CSP_POLICY
 
 app = Flask(__name__)
 
@@ -21,6 +22,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message = "Please log in to access that page."
+
+## setup for flask-talisman
+### worth setting a csp at some point, but not worth
+### keeping first iteration of the project offline
+Talisman(app, content_security_policy=None)
 
 ### set SQLite3 dB location
 DB_LOCATION = "file:/home/jacob/Projects/ArtistsForArtists/artforart.db"
