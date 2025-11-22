@@ -15,7 +15,7 @@ AfA seeks to change that.
 https://youtu.be/7maRUPDGiE4
 
 ### Summary:
-This first iteration of AfA is designed to implement core functionalities that an artist might want when displaying their work.
+This first iteration of AfA implements core functionalities that an artist might want when displaying their work.
 It answers the question, What core functionalities do I need the site to have before I display my Artist page to friends and family?
 
 There are two kinds of account, Artist and Viewer.
@@ -27,7 +27,7 @@ On the backend, they are able to add, modify, and delete works.
 They are also able to turn on/off password protection or change the needed credential.
 If an artist page is password protected guests need to recredential themselves each time they access the site in a new browser session.
 
-Viewers are able to save darkmode preferences and change their password. 
+Viewers are able to save darkmode preferences and change their account password. 
 
 Individuals without accounts are and will be able to read artist pages. 
 
@@ -46,13 +46,14 @@ AfA stores artists' bios and work in a database which is accessed to generate an
 
 ### User experience
 
-#### Landing page
+#### Landing and Search page
 
-The default landing page contains an index of all Artist pages on the platform. This landing page can be returned to using a button at the bottom of every page on the site.
+The default landing page allows access to a sidebar link to an index of all Artist pages on the platform. The landing page can be returned to using a button at the bottom of every page on the site.
 
 #### Artist-specific URLs
 
 Each artist-specific URL contains
+
 - About Me
 - Works
 
@@ -68,7 +69,7 @@ There are three settings pages.
 - My Subdomain
 
 My Account displays a summary of the user's account.
-In Settings users can see and changes prefs, and also their password.
+In Settings users can see and change prefs, and also their password.
 In My Subdomain artists can change subdomain settings as well as add, edit, or delete work.
 
 ### Architecture
@@ -103,12 +104,12 @@ Flask-Login handles user session management. EasyMDE provides the authors' text 
 
 A note on the templating structure is in order. There is a primary template.html. 
 Each 'section' of the site then builds off this template with one of its own.
-Unique pages within each section are variations on that sections template.
+Unique pages within each section are variations on that section's template.
 
 #### /static
 
-Static contains favicon files as well as needed custom JavaScript. The site uses Bootstrap (through a CDN) to deliver a responsive CSS framework.
-Darkmode is made possible through JavaScript that then toggles Bootstrap's built in darkmode setting.
+Static contains favicon files as well as custom JavaScript. The site uses Bootstrap (through a CDN) to deliver a responsive CSS framework.
+Darkmode is made possible through JavaScript that toggles Bootstrap's built in darkmode setting.
 
 ## Upcoming improvements:
 
