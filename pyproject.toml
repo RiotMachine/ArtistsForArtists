@@ -9,7 +9,7 @@ dependencies = [
     "Flask-WTF",
 ]
 version = "1.1.00"
-authors = 
+authors = [
     {name = "Jacob Jirak"}
 ]
 description = "A CMS designed by authors for authors."
