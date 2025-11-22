@@ -51,30 +51,14 @@ The default landing page contains an index of all Artist pages on the platform. 
 #### Artist-specific URLs
 
 Each artist-specific URL contains an About Me page and Works index.
-
-- About Me
-
-    The About Me page text is customizable using Markdown formatting. The basic design is a segment of text and an artist portrait.
-
-- Works
-
-    This index lists all of an artist's works in our database. Each work is accessible through a hyperlink on this page.
+The About Me page text is customizable using Markdown formatting. The basic design is a segment of text and an artist portrait.
+The Works index lists all of an artist's works in our database. Each work is accessible through a hyperlink on this page.
 	
 #### Settings pages
 
-There are three settings pages.
-
-- My Account
-
-	This page displays a summary of the user's account.
-
-- Settings
-
-	Here users can see and changes prefs, and also their password.
-
-- My Subdomain
-
-	Artists can change subdomain settings as well as add, edit, or delete work.
+There are three settings pages. My Account displays a summary of the user's account.
+In Settings users can see and changes prefs, and also their password.
+In My Subdomain artists can change subdomain settings as well as add, edit, or delete work.
 
 ### Architecture
 
