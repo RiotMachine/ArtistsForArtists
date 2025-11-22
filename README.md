@@ -117,7 +117,7 @@ The current state of the site, while sufficient as an MVP, has some way to go be
 We do not want to become another Substack, with addictive endless feeds and bloated design. 
 Still, there is room for growth while maintaining a clean and simple home for art.
 
-### For v1.10:
+### For v1.2:
 
 - Searchbar in header to allow users to search for and access an artist's page from anywhere on the site
 
