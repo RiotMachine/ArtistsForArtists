@@ -1,4 +1,5 @@
 ﻿artforart.db
+.env
 dev_notes/
 venv/
 ArtistsForArtists/__pycache__
