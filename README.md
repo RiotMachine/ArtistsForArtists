@@ -55,6 +55,7 @@ The default landing page contains an index of all Artist pages on the platform. 
 Each artist-specific URL contains
 - About Me
 - Works
+
 The About Me page text is customizable using Markdown formatting. The basic design is a segment of text and an artist portrait.
 The Works index lists all of an artist's works in our database. Each work is accessible through a hyperlink on this page.
 	
