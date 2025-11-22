@@ -1,86 +1,86 @@
 # Artists for Artists
 
-Artists for Artists (AfA) provides a content management system (CMS).
+Artists for Artists (AfA) provides a content management system (CMS). 
+Unlike other content management systems like Blogspot and Substack, it orients its design decisions around authors, not readers. 
+CMSes have to this point failed to provide for authors' unique needs such as submission tracking, version management, and industry-mandated privacy.
+AfA seeks to change that.
 
-Its primary focus is to be designed around and to streamline the artist experience.
+
+## Current State:
 
 ### Video Demo:  
 
 https://youtu.be/7maRUPDGiE4
 
-### Description:
+### Summary:
+This first iteration of AfA is designed to implement core functionalities that an artist might want when displaying their work.
+It answers the question, What core functionalities do I need the site to have before I display my Artist page to friends and family?
 
-There will be two kinds of account, Artist and Viewer.
+There are two kinds of account, Artist and Viewer.
 
-An Artist is allowed one URL path for their work of the type 'domainname.com/artistpage/...' Artists can make their works password protected, and can custom style their URL path.
+An Artist is allowed one URL path for their work of the type 'domainname.com/artistpage/...' 
+Artists have the ability to upload a bio and works.
+They can make their works password protected. 
+On the backend, they are able to add, modify, and delete works. 
+They are also able to turn on/off password protection or change the needed credential.
+If an artist page is password protected guests need to recredential themselves each time they access the site in a new browser session.
 
-Viewers will be able to create accounts to store favorite artist pages. They will also be able to comment on works and interact with artists and other users, enabling social networking of artists and fans.
+Viewers are able to save darkmode preferences and change their password. 
 
-Individuals without accounts will still be able to read artist pages. If an artist page is password protected these guests will need to recredential themselves each time they access the site in a new browser session or if the credential changes.
+Individuals without accounts are and will be able to read artist pages. 
 
-AfA stores artists' work in a database which is accessed to generate an index of each artist's work and as well as pages containing those works. Future iterations will provide assistance for work creation, submissions tracking, and submissions formatting.
-
-As a writer myself, AfA seeks to address the following qualms of mine with existing CMSes and other artist-assistance apps:
-
-- Single source of truth
-
-    I currently have several Word documents storing writing in submission-formatted and unformatted form. I access two separate sites to track submissions, plus two others to view literary journal rankings - not to mention literary journals themselves. Wouldnt it be nice to have all this information in one place?
-
-- Privacy
-
-    As a writer I am not allowed to share my works publicly if I want to have a chance at acceptance by literary journals. (The publishing world is a strange beast.) Having a CMS where writing can be shared but still be password protected so as not to be publicly searchable is vital. For example, even though Substack allows one to password-protect one's writing, those writings are still search-engine searchable which fails to satisfy the not-publicly-viewable requirement. 
-
-- Community
-
-    The creative life can be a lonely one. The current design of CMSes where interaction is primarily through commenting is unsatisfactory. By sharing and recommending Artist pages among users and interacting with artists themselves, AfA will allow for more-robust community building.
+AfA stores artists' bios and work in a database which is accessed to generate an index of each artist's work as well as pages containing those works.
 
 ### Design decisions:
 
-1. Each Artist account gets only one URL path
+1. Each Artist gets only one URL path
 
     Allowing an artist multiple URL paths would defeat the single source of truth component of the app.
 
-2. Unlogged-in viewers must reauthenticate for each URL path for each browser session
-
-    We want to make the site accessible for all while creating some friction for individuals who choose not to create user accounts.
-
-3. URL paths are designed around artists, not users
+2. URL paths are designed around artists, not users
 
     Not all artists are alive. We want users to be individuals who log into the site, artist or no. We want to allow the option for artists pages for individuals who are no longer with us.
 
-4. Custom CSS settings for artist pages
 
-    Artists can be finicky. They should have the option to customize their artist page within reason.
+### User experience
 
-### v1:
-
-The first iteration of AfA was designed using my limited perspective. If I went live tomorrow, what core functionalities do I need the site to have before I display my Artist page to friends and family?
-
-Thus this first iteration of AfA is designed to implement core functionalities that an artist might want when displaying their work. Future iterations will create more robust guest functionalities and front-end artist interfaces for uploading work and choosing settings.
-
-#### User experience
-
-##### Landing page
+#### Landing page
 
 The default landing page contains an index of all Artist pages on the platform. This landing page can be returned to using a button at the bottom of every page on the site.
 
-##### Artist-specific URLs
+#### Artist-specific URLs
 
 Each artist-specific URL contains an About Me page and Works index.
 
 - About Me
 
-    The About Me page text is customizable using Markdown formatting. The basic design is to have a segment of text and an artist portrait.
+    The About Me page text is customizable using Markdown formatting. The basic design is a segment of text and an artist portrait.
 
 - Works
 
     This index lists all of an artist's works in our database. Each work is accessible through a hyperlink on this page.
+	
+#### Settings pages
 
-#### Architecture
+There are three settings pages.
+
+- My Account
+
+	This page displays a summary of the user's account.
+
+- Settings
+
+	Here users can see and changes prefs, and also their password.
+
+- My Subdomain
+
+	Artists can change subdomain settings as well as add, edit, or delete work.
+
+### Architecture
 
 The site is a Flask app using jinja2 templates running on top of a SQLITE database.
 
-##### SQL database
+#### SQL database
 
 The database has 3 central tables: 
 
@@ -88,65 +88,54 @@ The database has 3 central tables:
 - Subdomains
 - Works
 
-     Works are linked to a single subdomain. The subdomain table is used to store the artist's settings for his/her URL path. The works table is used to store the works the artist uploads. The users table links to the subdomains table in the case that a user has an artist page.
+The subdomain table is used to store the artist's details and settings for his/her URL path. 
+The works table is used to store works the artist uploads.
+Works are linked to a subdomain in a M:1 relationship. Users and subdomains exist in a 1:1 relationship. 
+However, not every user has a subdomain, and not every subdomain has a user.
 
-##### Python/Flask backend
+#### Python/Flask backend
 
-The site runs on app.py and helpers.py.
+The site runs on Python Flask. The app is initialized in __init__.py. 
+Web navigation logic is handled in routes.py. User, Subdomain, and Work classes handle methods unique to instances of those objects.
 
-- app.py
+#### Dependencies
 
-    The <artistpage> variable pulled from URLs is key to the dynamic functioning of the site in its current iteration. 
+The site would not be possible without several web resources and libraries. 
+Pypandoc allows the site to dynamically generate html and save text using Pandoc. Text is stored in markdown.
+Flask-Login handles user session management. EasyMDE provides the authors' text editor.
 
-    Of particular note, displaywork(artistpage, worktitle) makes use of pandoc and pypandoc to dynamically format works. Works are stored in the dB as markdown and are converted using this software and wrapper into HTML upon user-access.
+#### jinja2 html templating
 
-- helpers.py
+A note on the templating structure is in order. There is a primary template.html. 
+Each 'section' of the site then builds off this template with one of its own.
+Unique pages within each section are variations on that sections template.
 
-    helpers.py contains .authReq for testing for valid URL paths, .dbOpen and .dbOpenDict for DB access, and .subdomainFails to operate the jinja2 filter for escaping characters in dynamically-created hyperlinks that may pose issues for browsers.
+#### /static
 
-##### jinja2 html templating
+Static contains favicon files as well as needed custom JavaScript. The site uses Bootstrap (through a CDN) to deliver a responsive CSS framework.
+Darkmode is made possible through JavaScript that then toggles Bootstrap's built in darkmode setting.
 
-- template.html
+## Upcoming improvements:
 
-    This template provides basic site-wide formatting. The order of precedence for CSS formatting is AfA > Bootstrap > Artist. Therefore Artists will only be able to adjust CSS elements that do not affect core design of the site, such as text color.
+The current state of the site, while sufficient as an MVP, has some way to go before it lives up to its intended mission.
+We do not want to become another Substack, with addictive endless feeds and bloated design. 
+Still, there is room for growth while maintaining a clean and simple home for art.
 
-- sitetemplate.html and sitedomaintemplate.html
+### For v1.10:
 
-    sitetemplate.html provides AfA homepages formatting. sitedomaintemplate.html provides formatting for artist pages.
+- Searchbar in header to allow users to search for and access an artist's page from anywhere on the site
 
-- index.html
+- User 'like' and 'follow' functionality so users can see on their homepages when favorite authors have uploaded new work and have easy access to those they enjoy
 
-    index is the AfA homepage.
+- Artist submission tracking and formatting
 
-- apology.html
+- Option to embed media in works pages (such as videos or audio of a reading)
 
-    This template is used when an invalid URL is passed to the browser.
+### Future improvements
 
-- authenticate.html
+- Subdomain-level display customization
 
-    This template is used when an Artist page requires authentication.
-
-- Other html templates
-
-    The remainder of templates are accessed to dynamically generate sites within each Artist page.
-
-##### /static
-
-Static contains global CSS, AfA-specific CSS, global JS, and Artist page-specific CSS using the format '<artistpage>.css'
-
-### Upcoming improvements:
-
-#### For v2:
-
-- Front-end Artist account creation, settings adjustments, and works upload
-
-- Submissions formatting algorithm
-
-- Site redesign: account options in header dropdown and urlpath options in sidebar
-
-#### Future improvements
-
-- Expand rendered html special char escaping
+- Locally served and tailored Bootstrap (via Sass)
 
 - Expanded functionalities for visual and auditory artists
 
@@ -157,8 +146,3 @@ Static contains global CSS, AfA-specific CSS, global JS, and Artist page-specifi
     - User-to-Artist interaction
 
     - Artist page statistics
-
-    ### Dependencies
-
-    #### External Dependencies
-    - 
