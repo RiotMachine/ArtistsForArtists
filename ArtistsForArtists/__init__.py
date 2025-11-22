@@ -4,7 +4,9 @@ from flask_login    import LoginManager
 app = Flask(__name__)
 
 ## SECRET_KEY is req for Flask cookies
-app.config['SECRET_KEY'] = 'ChangingThisOnceWeGoLive'
+app.config['SECRET_KEY'] = "ChangingThisOnceWeGoLive"
+app.config['RECAPTCHA_PUBLIC_KEY'] = "6LdEkhQsAAAAAL_V00C2mhfA09QO5ggPAFu681n1"
+app.config['RECAPTCHA_PRIVATE_KEY'] = "6LdEkhQsAAAAAOzLqzPEbj7B7zeWFqGWyjdz4N1j"
 
 ## .loopcontrols is for jinja2 control {% break %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')

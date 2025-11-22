@@ -10,19 +10,18 @@
 	<div class="col-10 col-md-6">
 		<table class="table">
 			<thead>
-				<tr>
 					<th class="text-center" colspan="2" scope="rowgroup">Details</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<th scope="row">Username:</th>
-					<td>{{ current_user.username }}</td>
+					<th class="col-6" scope="row">Username:</th>
+					<td class="col-6">{{ current_user.username }}</td>
 				</tr>
 				{% if subdomain is not none %}
 				<tr>
-					<th scope="row">Subdomain:</th>
-					<td>{{ subdomain.name }}</td>
+					<th class="col-6"scope="row">Subdomain:</th>
+					<td class="col-6">{{ subdomain.name }}</td>
 				</tr>
 				{% endif %}
 			</tbody>

@@ -10,16 +10,18 @@
 			{{ form.password(placeholder="Password", class="form-control mb-2") }}
 			{{ form.confirm(placeholder="Re-enter password", class="form-control mb-2") }}
 
+			{{ form.recaptcha(class="col-12") }}
+
 			<!--Using this solution because Bootstrap docs use cols to break up form segments,-->
 			<!--and because wrapping form-check in d-flex and using justify-content-center-->
 			<!--messes with Bootstrap's native form-check spacing-->
-			<div class="col-12 mb-1">
+			<div class="col-12 mb-2 mt-2">
 				<div class="form-check form-check-inline">
 					{{ form.rememberMe(class="form-check-input") }}
 					{{ form.rememberMe.label(class="form-check-label") }}
 				</div>
 			</div>
-			
+
 			<button class="btn btn-primary" type="submit">Register</button>
 		</form>
 	</div>
@@ -27,7 +29,7 @@
 
 <div class="row text-center">
 	<div class="col">
-		{% for field in [form.username, form.password, form.confirm] %}
+		{% for field in [form.username, form.password, form.confirm, form.recaptcha] %}
 			{% for error in field.errors %}
 				<p>{{ error }}</p>
 			{% endfor %}

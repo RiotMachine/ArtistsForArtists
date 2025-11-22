@@ -1,6 +1,6 @@
 from wtforms            import BooleanField, PasswordField, RadioField, StringField
 from wtforms.validators import EqualTo, InputRequired
-from flask_wtf          import FlaskForm
+from flask_wtf          import FlaskForm, Recaptcha, RecaptchaField
 from flask_wtf.file     import FileField, FileAllowed, FileRequired
 
 ## credit to @dcrosta
@@ -37,6 +37,9 @@ class RegisterForm(LoginForm):
         InputRequired(), 
         EqualTo('password', message='Your passwords must match')
         ])
+    ## https://github.com/pallets-eco/flask-wtf/issues/411
+    recaptcha = RecaptchaField(validators=[
+        Recaptcha(message="You must pass the Recaptcha")])
 
 
 class ChangePassForm(FlaskForm):
