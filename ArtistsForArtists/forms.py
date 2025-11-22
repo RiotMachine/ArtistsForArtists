@@ -37,6 +37,7 @@ class RegisterForm(LoginForm):
         InputRequired(), 
         EqualTo('password', message='Your passwords must match')
         ])
+    ## setting error msg according to this thread
     ## https://github.com/pallets-eco/flask-wtf/issues/411
     recaptcha = RecaptchaField(validators=[
         Recaptcha(message="You must pass the Recaptcha")])
