@@ -2,7 +2,7 @@ import urllib.parse as urllib
 from flask                      import (Blueprint, abort, flash, g, jsonify, make_response, redirect, 
                                         render_template, request, session, url_for)
 from flask_login                import current_user, login_required, login_user, logout_user
-import markupsafe
+import bleach
 import pypandoc
 import werkzeug.exceptions
 from werkzeug.security          import check_password_hash as check_pass, generate_password_hash
@@ -84,7 +84,7 @@ def search():
         subNames = dbQuery("SELECT pagename FROM subdomains")
     for subName in subNames:
         ## AJAX injects html, so escaping subdomain names just in case
-        safeSubName = markupsafe.escape(subName['pagename'])
+        safeSubName = bleach.clean(subName['pagename'])
         subNamesList.append(safeSubName)
 
     if request.method == "GET":
@@ -320,7 +320,7 @@ def aboutme(subName):
     subdomain = Subdomain(getSubdomainID(subName))
 
     aboutmeRow = subdomain.getAboutmeRow()
-    safeAboutme = markupsafe.escape(aboutmeRow['aboutme'])
+    safeAboutme = bleach.clean(aboutmeRow['aboutme'])
     htmlAboutme = pypandoc.convert_text(safeAboutme, 'html', format='md')
     hasphoto = bool(aboutmeRow['hasphoto'])
 
@@ -370,7 +370,7 @@ def text(subName, worktitle):
     text = subdomain.getWork(worktitle)
     if text is None:
         abort(404)
-    safeText = markupsafe.escape(text['content'])
+    safeText = bleach.clean(text['content'])
     htmlText = pypandoc.convert_text(safeText, 'html', format='md')
    
     return render_template("subText.html", 
