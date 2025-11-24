@@ -12,7 +12,7 @@ AfA seeks to change that.
 
 ### Video Demo:  
 
-https://youtu.be/7maRUPDGiE4
+https://youtu.be/FWWigC2IOIg
 
 ### Summary:
 This first iteration of AfA implements core functionalities that an artist might want when displaying their work.
