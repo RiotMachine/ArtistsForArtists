@@ -3,4 +3,4 @@
 dev_notes/
 venv/
 ArtistsForArtists/__pycache__
-ArtistsForArtists/static/*.jpeg
+ArtistsForArtists/static/media/
