@@ -30,7 +30,7 @@ login_manager.login_message = "Please log in to access that page."
 ## setup for flask-talisman
 ### worth setting a csp at some point, but not worth
 ### keeping first iteration of the project offline
-Talisman(app, content_security_policy=None)
+Talisman(app, content_security_policy=None, force_https=False)
 
 import ArtistsForArtists.routes as routes
 app.register_blueprint(routes.subdomain)
