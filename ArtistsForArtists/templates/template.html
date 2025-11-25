@@ -18,7 +18,7 @@
         <title>
             {% block pageTitle %}{% endblock %}
         </title>
-        <script src="{{ url_for('static', filename='js/global.js') }}" async></script>
+        <script src="{{ url_for('static', filename='js/global.js') }}" defer></script>
         {% block head %}{% endblock %}
     </head>
     <body class="d-flex flex-column min-vh-100">
