@@ -10,6 +10,8 @@ AfA seeks to change that.
 
 ### URL:
 
+artistsforartists.art
+
 ### Video Demo:  
 
 https://youtu.be/FWWigC2IOIg
