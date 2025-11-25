@@ -10,7 +10,7 @@ AfA seeks to change that.
 
 ### URL:
 
-artistsforartists.art
+https://artistsforartists.art
 
 ### Video Demo:  
 
