@@ -1,6 +1,7 @@
 [project]
 name = "ArtistsForArtists"
 dependencies = [
+    "bleach",
     "flask",
     "flask-login",
 	"flask-talisman",

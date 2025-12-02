@@ -32,9 +32,7 @@ login_manager.login_message = "Please log in to access that page."
 ### keeping first iteration of the project offline
 Talisman(
     app, 
-    content_security_policy=None, 
-    force_https=False, 
-    session_cookie_secure=False
+    content_security_policy=None,
 )
 
 import ArtistsForArtists.routes as routes
